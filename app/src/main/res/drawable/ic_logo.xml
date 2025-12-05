@@ -1,0 +1,30 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M50.4853,32C50.4853,42.2132 42.2132,50.4853 32,50.4853C21.7868,50.4853 13.5147,42.2132 13.5147,32C13.5147,21.7868 21.7868,13.5147 32,13.5147C42.2132,13.5147 50.4853,21.7868 50.4853,32Z"
+        android:strokeWidth="3"
+        android:strokeColor="@color/primary_pink"
+        android:strokeMiterLimit="10"/>
+
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M41.4411,32C41.4411,37.2218 37.2218,41.4411 32,41.4411C26.7781,41.4411 22.5588,37.2218 22.5588,32C22.5588,26.7781 26.7781,22.5588 32,22.5588C37.2218,22.5588 41.4411,26.7781 41.4411,32Z"
+        android:strokeWidth="2"
+        android:strokeColor="@color/primary_pink"
+        android:strokeMiterLimit="10"/>
+
+    <path android:fillColor="#00000000" android:pathData="M32,50.4853V61.1764" android:strokeWidth="3" android:strokeColor="@color/primary_pink" android:strokeLineCap="round" android:strokeMiterLimit="10"/>
+    <path android:fillColor="#00000000" android:pathData="M32,2.82355V13.5147" android:strokeWidth="3" android:strokeColor="@color/primary_pink" android:strokeLineCap="round" android:strokeMiterLimit="10"/>
+    <path android:fillColor="#00000000" android:pathData="M13.5147,32H2.82355" android:strokeWidth="3" android:strokeColor="@color/primary_pink" android:strokeLineCap="round" android:strokeMiterLimit="10"/>
+    <path android:fillColor="#00000000" android:pathData="M61.1764,32H50.4852" android:strokeWidth="3" android:strokeColor="@color/primary_pink" android:strokeLineCap="round" android:strokeMiterLimit="10"/>
+
+    <path android:fillColor="#00000000" android:pathData="M19.349,44.651L11.8711,52.1289" android:strokeWidth="3" android:strokeColor="@color/primary_pink" android:strokeLineCap="round" android:strokeMiterLimit="10"/>
+    <path android:fillColor="#00000000" android:pathData="M52.1289,11.8711L44.651,19.349" android:strokeWidth="3" android:strokeColor="@color/primary_pink" android:strokeLineCap="round" android:strokeMiterLimit="10"/>
+    <path android:fillColor="#00000000" android:pathData="M19.349,19.349L11.8711,11.8711" android:strokeWidth="3" android:strokeColor="@color/primary_pink" android:strokeLineCap="round" android:strokeMiterLimit="10"/>
+    <path android:fillColor="#00000000" android:pathData="M52.1289,52.1289L44.651,44.651" android:strokeWidth="3" android:strokeColor="@color/primary_pink" android:strokeLineCap="round" android:strokeMiterLimit="10"/>
+</vector>
