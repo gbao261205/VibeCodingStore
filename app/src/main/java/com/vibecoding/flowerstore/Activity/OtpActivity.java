@@ -1,6 +1,7 @@
 package com.vibecoding.flowerstore.Activity;
 
 import android.os.Bundle;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,12 +11,16 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.vibecoding.flowerstore.R;
 
-public class MainActivity extends AppCompatActivity {
+public class OtpActivity extends AppCompatActivity {
+
+    private ImageView ivBack;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_otp);
+
+
     }
 }
