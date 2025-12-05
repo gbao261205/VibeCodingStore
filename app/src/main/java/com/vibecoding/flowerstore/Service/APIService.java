@@ -10,7 +10,7 @@ public interface APIService {
     // ================== 1. AUTHENTICATION ==================
     @POST("auth/login")
     Call<LoginResponse> login(@Body LoginRequest request);
-//
+
 //    @POST("auth/logout")
 //    Call<MessageResponse> logout();
 //
@@ -25,12 +25,12 @@ public interface APIService {
 //
     @POST("auth/register")
     Call<RegisterResponse> register(@Body RegisterRequest request);
-//
+
     @POST("auth/verify-otp")
     Call<VerifyOtpResponse> verifyOtp(@Body VerifyOtpRequest request);
-//
-//    @POST("auth/resend-otp")
-//    Call<MessageResponse> resendOtp(@Body ResendOtpRequest request);
+
+    @POST("auth/resend-otp")
+    Call<ResendOtpResponse> resendOtp(@Body ResendOtpRequest request);
 //
 //    @POST("auth/forgot-password")
 //    Call<MessageResponse> forgotPassword(@Body ForgotPasswordRequest request);

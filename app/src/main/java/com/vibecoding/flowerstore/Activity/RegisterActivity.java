@@ -30,7 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
     private Button btnRegister;
     private ImageView ivBack;
-    private EditText edtFullName, edtEmail, edtPassword, edtConfirmPassword, edtPhoneNumber;
+    private EditText edtFullName, edtEmail, edtPassword, edtConfirmPassword, edtPhoneNumber, edtUsername;
     private TextView tvLogin, tvNotice;
 
     @Override
@@ -48,7 +48,9 @@ public class RegisterActivity extends AppCompatActivity {
         edtPhoneNumber = findViewById(R.id.edtPhoneNumber);
         tvLogin = findViewById(R.id.tvLogin);
         tvNotice = findViewById(R.id.tvNotice);
+        edtUsername = findViewById(R.id.edtUsername);
 
+        //Xử lý sự kiện cho nút Back
         ivBack.setOnClickListener(v -> {
             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
             startActivity(intent);
@@ -69,7 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void Register() {
         APIService apiService = RetrofitClient.getClient().create(APIService.class);
 
-        RegisterRequest registerRequest = new RegisterRequest(edtFullName.getText().toString(), edtPassword.getText().toString(), edtEmail.getText().toString(), edtConfirmPassword.getText().toString(), edtPhoneNumber.getText().toString());
+        RegisterRequest registerRequest = new RegisterRequest(edtUsername.getText().toString(), edtPassword.getText().toString(), edtEmail.getText().toString(), edtFullName.getText().toString(), edtPhoneNumber.getText().toString());
 
         Call<RegisterResponse> call = apiService.register(registerRequest);
 
@@ -81,6 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
                     if (registerResponse != null) {
                         if (registerResponse.getMessage() != null) {
                             Intent intent = new Intent(RegisterActivity.this, OtpActivity.class);
+                            intent.putExtra("username", edtUsername.getText().toString());
                             startActivity(intent);
                         } else {
                             Log.d(TAG, "Lỗi đăng ký: " + response.code());

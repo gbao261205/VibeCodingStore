@@ -21,17 +21,6 @@
             android:orientation="horizontal"
             android:padding="16dp">
 
-            <ImageView
-                android:id="@+id/ivBack"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:contentDescription="Back"
-                android:padding="12dp"
-                android:src="@drawable/ic_back"
-                app:tint="@color/text_dark" />
-
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -40,12 +29,9 @@
                 android:gravity="center"
                 android:text="Xác thực OTP"
                 android:textColor="@color/text_dark"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <View
-                android:layout_width="48dp"
-                android:layout_height="48dp" />
         </LinearLayout>
 
         <TextView
@@ -79,7 +65,7 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/otp1"
+                android:id="@+id/edtOtp1"
                 android:layout_width="48dp"
                 android:layout_height="64dp"
                 android:layout_marginEnd="8dp"
@@ -93,7 +79,7 @@
                 android:textColor="@color/text_dark" />
 
             <EditText
-                android:id="@+id/otp2"
+                android:id="@+id/edtOtp2"
                 android:layout_width="48dp"
                 android:layout_height="64dp"
                 android:layout_marginEnd="8dp"
@@ -107,7 +93,7 @@
                 android:textColor="@color/text_dark" />
 
             <EditText
-                android:id="@+id/otp3"
+                android:id="@+id/edtOtp3"
                 android:layout_width="48dp"
                 android:layout_height="64dp"
                 android:layout_marginEnd="8dp"
@@ -121,7 +107,7 @@
                 android:textColor="@color/text_dark" />
 
             <EditText
-                android:id="@+id/otp4"
+                android:id="@+id/edtOtp4"
                 android:layout_width="48dp"
                 android:layout_height="64dp"
                 android:layout_marginEnd="8dp"
@@ -135,7 +121,7 @@
                 android:textColor="@color/text_dark" />
 
             <EditText
-                android:id="@+id/otp5"
+                android:id="@+id/edtOtp5"
                 android:layout_width="48dp"
                 android:layout_height="64dp"
                 android:layout_marginEnd="8dp"
@@ -149,7 +135,7 @@
                 android:textColor="@color/text_dark" />
 
             <EditText
-                android:id="@+id/otp6"
+                android:id="@+id/edtOtp6"
                 android:layout_width="48dp"
                 android:layout_height="64dp"
                 android:background="@drawable/bg_otp_input"
