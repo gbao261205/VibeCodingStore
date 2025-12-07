@@ -26,7 +26,7 @@ import retrofit2.Callback;
 
 public class OtpActivity extends AppCompatActivity {
     private static final String TAG = "OtpActivity";
-    private EditText edtOtp1, edtOtp2, edtOtp3, edtOtp4, edtOtp5, edtOtp6;
+    private EditText edtOtp;
     private Button btnConfirm;
     private TextView tvResend, tvNotice;
     private String username;
@@ -37,12 +37,7 @@ public class OtpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_otp);
 
         //Ánh xạ
-        edtOtp1 = findViewById(R.id.edtOtp1);
-        edtOtp2 = findViewById(R.id.edtOtp2);
-        edtOtp3 = findViewById(R.id.edtOtp3);
-        edtOtp4 = findViewById(R.id.edtOtp4);
-        edtOtp5 = findViewById(R.id.edtOtp5);
-        edtOtp6 = findViewById(R.id.edtOtp6);
+        edtOtp = findViewById(R.id.edtOtp);
         btnConfirm = findViewById(R.id.btnConfirm);
         tvResend = findViewById(R.id.tvResend);
         tvNotice = findViewById(R.id.tvNotice);
@@ -64,12 +59,13 @@ public class OtpActivity extends AppCompatActivity {
     }
 
     private void ConfirmOtp() {
-        String otpCode = edtOtp1.getText().toString()
-                + edtOtp2.getText().toString()
-                + edtOtp3.getText().toString()
-                + edtOtp4.getText().toString()
-                + edtOtp5.getText().toString()
-                + edtOtp6.getText().toString();
+        String otpCode = edtOtp.getText().toString();
+        
+        if (otpCode.length() != 6) {
+            tvNotice.setText("Vui lòng nhập mã OTP gồm 6 chữ số.");
+            tvNotice.setVisibility(View.VISIBLE);
+            return;
+        }
 
         APIService apiService = RetrofitClient.getClient().create(APIService.class);
         VerifyOtpRequest verifyOtpRequest = new VerifyOtpRequest(username, otpCode);
@@ -82,15 +78,27 @@ public class OtpActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     VerifyOtpResponse verifyOtpResponse = response.body();
                     if (verifyOtpResponse != null) {
-                        Intent intent = new Intent(OtpActivity.this, LoginActivity.class);
+                        Intent intent = new Intent(OtpActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
-                    }
-                    else {
-                        Log.d(TAG, "Lỗi xác thực OTP: " + response.code());
-                        tvNotice.setText("Xác thực thất bại");
+                    } else {
+                        Log.d(TAG, "Lỗi xác thực OTP: Phản hồi thành công nhưng nội dung trống.");
+                        tvNotice.setText("Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.");
                         tvNotice.setVisibility(View.VISIBLE);
                     }
+                } else {
+                    Log.d(TAG, "Lỗi xác thực OTP: " + response.code());
+                    try {
+                        if (response.errorBody() != null) {
+                            String errorBody = response.errorBody().string();
+                            Log.e(TAG, "Chi tiết lỗi: " + errorBody);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    tvNotice.setText("Mã OTP không đúng hoặc đã hết hạn.");
+                    tvNotice.setVisibility(View.VISIBLE);
                 }
             }
             @Override

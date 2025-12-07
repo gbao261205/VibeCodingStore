@@ -56,98 +56,23 @@
             android:textColor="@color/text_hint"
             android:textSize="16sp" />
 
-        <LinearLayout
-            android:id="@+id/otpContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
+        <EditText
+            android:id="@+id/edtOtp"
+            android:layout_width="290dp"
+            android:layout_height="64dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_otp_input"
+            android:layout_gravity="center"
+            android:inputType="number"
+            android:maxLength="6"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"
+            android:hint="OTP"
+            android:textAlignment="center"/>
 
-            <EditText
-                android:id="@+id/edtOtp1"
-                android:layout_width="48dp"
-                android:layout_height="64dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/bg_otp_input"
-                android:gravity="center"
-                android:inputType="number"
-                android:maxLength="1"
-                android:imeOptions="actionNext"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_dark" />
-
-            <EditText
-                android:id="@+id/edtOtp2"
-                android:layout_width="48dp"
-                android:layout_height="64dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/bg_otp_input"
-                android:gravity="center"
-                android:inputType="number"
-                android:maxLength="1"
-                android:imeOptions="actionNext"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_dark" />
-
-            <EditText
-                android:id="@+id/edtOtp3"
-                android:layout_width="48dp"
-                android:layout_height="64dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/bg_otp_input"
-                android:gravity="center"
-                android:inputType="number"
-                android:maxLength="1"
-                android:imeOptions="actionNext"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_dark" />
-
-            <EditText
-                android:id="@+id/edtOtp4"
-                android:layout_width="48dp"
-                android:layout_height="64dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/bg_otp_input"
-                android:gravity="center"
-                android:inputType="number"
-                android:maxLength="1"
-                android:imeOptions="actionNext"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_dark" />
-
-            <EditText
-                android:id="@+id/edtOtp5"
-                android:layout_width="48dp"
-                android:layout_height="64dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/bg_otp_input"
-                android:gravity="center"
-                android:inputType="number"
-                android:maxLength="1"
-                android:imeOptions="actionNext"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_dark" />
-
-            <EditText
-                android:id="@+id/edtOtp6"
-                android:layout_width="48dp"
-                android:layout_height="64dp"
-                android:background="@drawable/bg_otp_input"
-                android:gravity="center"
-                android:inputType="number"
-                android:maxLength="1"
-                android:imeOptions="actionDone"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_dark" />
-
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -192,13 +117,13 @@
             android:layout_marginHorizontal="24dp"
             android:layout_marginTop="48dp"
             android:backgroundTint="@color/primary_pink"
-            android:enabled="false"
             android:paddingVertical="14dp"
             android:text="Xác nhận"
             android:textAllCaps="false"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:cornerRadius="12dp" />
+            app:cornerRadius="12dp"
+            android:textColor="@color/white"/>
 
     </LinearLayout>
 </ScrollView>
