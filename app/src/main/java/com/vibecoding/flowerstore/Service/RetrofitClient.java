@@ -1,27 +1,33 @@
 package com.vibecoding.flowerstore.Service;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
     private static final String BASE_URL = "https://holetinnghia-vibe-coding-store-api.hf.space/api/v1/";
-    private static Retrofit retrofit;
 
     // Tách thành 2 biến riêng biệt để không bị xung đột
     private static Retrofit retrofitPublic; // Dùng cho Login, Register
     private static Retrofit retrofitAuth;   // Dùng cho Cart, Order, Profile
 
     // 1. Client cho API không cần Token (Login, Register...)
-    public static Retrofit getClient(){
-        if (retrofit == null) {
-            retrofit = new Retrofit.Builder()
+    public static Retrofit getClient() {
         if (retrofitPublic == null) {
             retrofitPublic = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
-        return retrofit;
         return retrofitPublic;
     }
 
@@ -42,7 +48,6 @@ public class RetrofitClient {
                     if (token != null) {
                         Request newRequest = originalRequest.newBuilder()
                                 .header("Authorization", "Bearer " + token)
-                                .method(originalRequest.method(), originalRequest.body())
                                 .build();
                         return chain.proceed(newRequest);
                     }

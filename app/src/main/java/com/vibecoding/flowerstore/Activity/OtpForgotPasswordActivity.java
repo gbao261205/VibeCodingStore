@@ -64,7 +64,8 @@ public class OtpForgotPasswordActivity extends AppCompatActivity {
         }
 
         APIService apiService = RetrofitClient.getClient().create(APIService.class);
-        VerifyOtpRequest verifyOtpRequest = new VerifyOtpRequest(username, otpCode);
+        // SỬA: Dùng biến 'email' thay vì 'username' không tồn tại
+        VerifyOtpRequest verifyOtpRequest = new VerifyOtpRequest(email, otpCode);
 
         Call<VerifyOtpResponse> call = apiService.verifyOtp(verifyOtpRequest);
 
@@ -74,7 +75,9 @@ public class OtpForgotPasswordActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     VerifyOtpResponse verifyOtpResponse = response.body();
                     if (verifyOtpResponse != null) {
-                        Intent intent = new Intent(OtpActivity.this, MainActivity.class);
+                        // SỬA: Chuyển sang màn hình ChangePassword sau khi xác thực thành công
+                        Intent intent = new Intent(OtpForgotPasswordActivity.this, ChangePassword.class);
+                        intent.putExtra("email", email); // Gửi email sang màn hình đổi mật khẩu
                         startActivity(intent);
                         finish();
                     } else {

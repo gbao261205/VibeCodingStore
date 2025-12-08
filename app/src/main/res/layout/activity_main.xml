@@ -126,7 +126,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 
-                <!-- Bạn có thể giữ lại banner_dots nếu muốn, và cập nhật nó bằng code -->
                 <LinearLayout
                     android:id="@+id/banner_dots"
                     android:layout_width="wrap_content"
@@ -137,11 +136,9 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent">
-                    <!-- Các dots sẽ được thêm vào bằng code -->
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-            <!-- KẾT THÚC THAY ĐỔI -->
 
             <TextView
                 android:layout_width="wrap_content"
@@ -208,6 +205,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
+            android:id="@+id/home_button" 
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -232,6 +230,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/category_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -256,6 +255,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/favorite_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -280,6 +280,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/profile_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

@@ -4,14 +4,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.GridLayoutManager; // Thêm import này
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -25,12 +30,11 @@ import com.vibecoding.flowerstore.Adapter.CategoryAdapter;
 import com.vibecoding.flowerstore.Model.SlideItem;
 import com.vibecoding.flowerstore.R;
 import com.vibecoding.flowerstore.Service.ApiClient;
-import com.vibecoding.flowerstore.Service.ApiService;
+import com.vibecoding.flowerstore.Service.APIService;
 
 import java.util.ArrayList;
 import java.util.List;
 import android.os.Handler;
-
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,25 +42,29 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Sửa: Chỉ cần một RecyclerView và một Adapter
     private RecyclerView recyclerProducts;
     private ProductAdapter productAdapter;
     private RecyclerView recyclerCategories;
     private CategoryAdapter categoryAdapter;
 
     private ViewPager2 viewPagerImageSlider;
-    private LinearLayout bannerDotsLayout; // Layout chứa các dấu chấm
+    private LinearLayout bannerDotsLayout;
     private SlideAdapter slideAdapter;
-    private final Handler sliderHandler = new Handler(Looper.getMainLooper())   ;
+    private final Handler sliderHandler = new Handler(Looper.getMainLooper());
     private Runnable sliderRunnable;
     private static final String TAG = "MainActivity";
+
+    // Thêm các biến cho nút điều hướng
+    private LinearLayout homeButton, categoryButton, favoriteButton, profileButton;
+    private ImageButton cartButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); // Giả sử layout chính của bạn có RecyclerView với id recycler_products
+        setContentView(R.layout.activity_main);
 
         setupViews();
+        setupNavigation(); // Thêm hàm để cài đặt điều hướng
         setupImageSliderAndDots();
         setupRecyclerView();
         fetchProductsFromApi();
@@ -64,17 +72,44 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViews() {
-        // Ánh xạ RecyclerView từ layout activity_main.xml
         viewPagerImageSlider = findViewById(R.id.view_pager_image_slider);
-        bannerDotsLayout = findViewById(R.id.banner_dots); // Ánh xạ layout cho dots
+        bannerDotsLayout = findViewById(R.id.banner_dots);
         recyclerProducts = findViewById(R.id.recycler_products);
-        recyclerCategories = findViewById(R.id.recycler_categories); // <-- THÊM DÒNG NÀY// <-- Đảm bảo id này tồn tại trong activity_main.xml
+        recyclerCategories = findViewById(R.id.recycler_categories);
+        cartButton = findViewById(R.id.button_cart); // Ánh xạ nút giỏ hàng
+
+        // Ánh xạ các nút điều hướng
+        homeButton = findViewById(R.id.home_button);
+        categoryButton = findViewById(R.id.category_button);
+        favoriteButton = findViewById(R.id.favorite_button);
+        profileButton = findViewById(R.id.profile_button);
+    }
+
+    private void setupNavigation() {
+        profileButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+            startActivity(intent);
+        });
+
+        cartButton.setOnClickListener(v -> {
+            SharedPreferences prefs = getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE);
+            if (prefs.getString("ACCESS_TOKEN", null) != null) {
+                // Đã đăng nhập -> Mở giỏ hàng
+                startActivity(new Intent(MainActivity.this, CartActivity.class));
+            } else {
+                // Chưa đăng nhập -> Yêu cầu đăng nhập
+                Toast.makeText(this, "Vui lòng đăng nhập để xem giỏ hàng", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            }
+        });
+
+        homeButton.setOnClickListener(v -> Toast.makeText(MainActivity.this, "Bạn đang ở Trang chủ", Toast.LENGTH_SHORT).show());
+        categoryButton.setOnClickListener(v -> Toast.makeText(MainActivity.this, "Chức năng Danh mục sắp có!", Toast.LENGTH_SHORT).show());
+        favoriteButton.setOnClickListener(v -> Toast.makeText(MainActivity.this, "Chức năng Yêu thích sắp có!", Toast.LENGTH_SHORT).show());
     }
 
     private void setupImageSliderAndDots() {
         List<SlideItem> slideItems = new ArrayList<>();
-        // THAY THẾ bằng các ảnh của bạn trong /res/drawable
-        // Ví dụ:
         slideItems.add(new SlideItem(R.drawable.banner1));
         slideItems.add(new SlideItem(R.drawable.banner2));
         slideItems.add(new SlideItem(R.drawable.banner3));
@@ -82,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
         slideAdapter = new SlideAdapter(slideItems);
         viewPagerImageSlider.setAdapter(slideAdapter);
 
-        // Thiết lập hiệu ứng chuyển slide (phóng to/thu nhỏ)
         CompositePageTransformer transformer = new CompositePageTransformer();
         transformer.addTransformer(new MarginPageTransformer(40));
         transformer.addTransformer((page, position) -> {
@@ -91,26 +125,22 @@ public class MainActivity extends AppCompatActivity {
         });
         viewPagerImageSlider.setPageTransformer(transformer);
 
-        // **BẮT ĐẦU: Logic cho Dots**
-        setupBannerDots(slideItems.size()); // Tạo các dấu chấm
+        setupBannerDots(slideItems.size());
 
         viewPagerImageSlider.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                updateBannerDots(position); // Cập nhật trạng thái chấm khi slide thay đổi
-                // Reset timer mỗi khi người dùng tự vuốt
+                updateBannerDots(position);
                 sliderHandler.removeCallbacks(sliderRunnable);
-                sliderHandler.postDelayed(sliderRunnable, 3000); // Tự động chuyển sau 3 giây
+                sliderHandler.postDelayed(sliderRunnable, 3000);
             }
         });
-        // **KẾT THÚC: Logic cho Dots**
 
-        // Logic tự động chuyển slide
         sliderRunnable = () -> {
             int currentItem = viewPagerImageSlider.getCurrentItem();
             if (currentItem == slideItems.size() - 1) {
-                viewPagerImageSlider.setCurrentItem(0, true); // Quay về slide đầu
+                viewPagerImageSlider.setCurrentItem(0, true);
             } else {
                 viewPagerImageSlider.setCurrentItem(currentItem + 1);
             }
@@ -119,27 +149,24 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupBannerDots(int count) {
         ImageView[] dots = new ImageView[count];
-        bannerDotsLayout.removeAllViews(); // Xóa các dots cũ nếu có
+        bannerDotsLayout.removeAllViews();
 
         for (int i = 0; i < dots.length; i++) {
             dots[i] = new ImageView(this);
-            dots[i].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.dot_inactive)); // Sử dụng drawable cho chấm không active
-
+            dots[i].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.dot_inactive));
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
-            params.setMargins(8, 0, 8, 0); // Khoảng cách giữa các chấm
+            params.setMargins(8, 0, 8, 0);
             bannerDotsLayout.addView(dots[i], params);
         }
 
-        // Kích hoạt dot đầu tiên
         if (dots.length > 0) {
-            dots[0].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.dot_active)); // Sử dụng drawable cho chấm active
+            dots[0].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.dot_active));
         }
     }
 
-    // --- HÀM CẬP NHẬT TRẠNG THÁI DOTS KHI SLIDE THAY ĐỔI ---
     private void updateBannerDots(int currentPage) {
         int childCount = bannerDotsLayout.getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -152,7 +179,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // --- Quản lý vòng đời của Handler để tránh rò rỉ bộ nhớ ---
     @Override
     protected void onPause() {
         super.onPause();
@@ -162,30 +188,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Bắt đầu chạy slider sau một khoảng trễ
         sliderHandler.postDelayed(sliderRunnable, 3000);
     }
 
     private void setupRecyclerView() {
-        // Khởi tạo Adapter với danh sách rỗng ban đầu
         productAdapter = new ProductAdapter(new ArrayList<>(), this);
-
-        // Sử dụng GridLayoutManager để hiển thị 2 cột
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         recyclerProducts.setLayoutManager(layoutManager);
-
         recyclerProducts.setAdapter(productAdapter);
 
-        // --- BẮT ĐẦU THÊM: Setup cho Category RecyclerView ---
         categoryAdapter = new CategoryAdapter(new ArrayList<>(), this);
-        // LinearLayoutManager với chiều ngang đã được set trong XML, nhưng set ở đây cũng được
         LinearLayoutManager categoryLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerCategories.setLayoutManager(categoryLayoutManager);
         recyclerCategories.setAdapter(categoryAdapter);
-        // --- KẾT THÚC THÊM ---
     }
+
     private void fetchCategoriesFromApi() {
-        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+        APIService apiService = ApiClient.getClient().create(APIService.class);
         Call<List<Category>> call = apiService.getCategories();
 
         call.enqueue(new Callback<List<Category>>() {
@@ -212,21 +231,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     private void fetchProductsFromApi() {
-        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+        APIService apiService = ApiClient.getClient().create(APIService.class);
 
-        // --- BẮT ĐẦU THAY ĐỔI ---
-
-        // Định nghĩa các tham số cho API
         String query = "";
         String page = "";
         String size = "";
         String sortBy = "bestselling";
 
-        // Gọi API với đầy đủ các tham số được yêu cầu
         Call<ApiResponse> call = apiService.getProducts(query, page, size, sortBy);
-
-        // --- KẾT THÚC THAY ĐỔI ---
 
         call.enqueue(new Callback<ApiResponse>() {
             @Override
@@ -242,7 +256,6 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Hiện không có sản phẩm nổi bật nào", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    // Log thêm body của lỗi để dễ debug
                     try {
                         Log.e(TAG, "Lỗi API: " + response.code() + " - " + response.errorBody().string());
                     } catch (Exception e) {
