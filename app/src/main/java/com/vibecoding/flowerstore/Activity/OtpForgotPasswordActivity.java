@@ -16,6 +16,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.vibecoding.flowerstore.R;
 import com.vibecoding.flowerstore.Service.APIService;
+import com.vibecoding.flowerstore.Service.ResendOtpForgotPassRequest;
+import com.vibecoding.flowerstore.Service.ResendOtpRequest;
+import com.vibecoding.flowerstore.Service.ResendOtpResponse;
 import com.vibecoding.flowerstore.Service.ResetPasswordVerifyRequest;
 import com.vibecoding.flowerstore.Service.ResetPasswordVerifyResponse;
 import com.vibecoding.flowerstore.Service.RetrofitClient;
@@ -45,6 +48,10 @@ public class OtpForgotPasswordActivity extends AppCompatActivity {
         tvResend = findViewById(R.id.tvResend);
 
         email = getIntent().getStringExtra("email");
+
+        tvResend.setOnClickListener(v -> {
+            resendOtp();
+        });
 
         btnConfirm.setOnClickListener(v -> {
             String otp = edtOtp.getText().toString();
@@ -106,6 +113,35 @@ public class OtpForgotPasswordActivity extends AppCompatActivity {
                 tvNotice.setText("Xác thực thất bại. Vui lòng kiểm tra lại kết nối mạng.");
                 tvNotice.setVisibility(View.VISIBLE);
             }
+        });
+    }
+
+    private void resendOtp(){
+        APIService apiService = RetrofitClient.getClient().create(APIService.class);
+        ResendOtpForgotPassRequest resendOtpForgotPassRequest = new ResendOtpForgotPassRequest(email);
+        Call<ResendOtpResponse> call = apiService.resendResetOtp(resendOtpForgotPassRequest);
+
+        call.enqueue(new Callback<ResendOtpResponse>() {
+           @Override
+           public void onResponse(Call<ResendOtpResponse> call, retrofit2.Response<ResendOtpResponse> response) {
+                if (response.isSuccessful()) {
+                    ResendOtpResponse resendOtpResponse = response.body();
+                    if (resendOtpResponse != null) {
+                        tvNotice.setText("Mã OTP đã được gửi lại. Vui lòng kiểm tra email.");
+                        tvNotice.setVisibility(View.VISIBLE);
+                    } else {
+                        Log.d(TAG, "Lỗi gửi OTP: Phản hồi thành công nhưng nội dung trống.");
+                        tvNotice.setText("Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.");
+                        tvNotice.setVisibility(View.VISIBLE);
+                    }
+                }
+           }
+           @Override
+           public void onFailure(Call<ResendOtpResponse> call, Throwable t) {
+               Log.e(TAG, "Lỗi gửi OTP: " + t.getMessage());
+               tvNotice.setText("Gửi OTP thất bại. Vui lòng kiểm tra lại kết nối mạng.");
+               tvNotice.setVisibility(View.VISIBLE);
+           }
         });
     }
 }

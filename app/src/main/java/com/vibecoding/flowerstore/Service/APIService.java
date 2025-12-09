@@ -42,7 +42,7 @@ public interface APIService {
     Call<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest request);
 
     @POST("auth/resend-reset-otp")
-    Call<ResendOtpResponse> resendResetOtp(@Body ResendOtpRequest request);
+    Call<ResendOtpResponse> resendResetOtp(@Body ResendOtpForgotPassRequest request);
 //
 //    // ================== 2. PRODUCTS ==================
 //    @GET("home/products")
