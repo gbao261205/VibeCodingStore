@@ -26,7 +26,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
-
     private static final String TAG = "ForgotPasswordActivity";
     private ImageView ivBack;
     private EditText edtEmail;
@@ -77,15 +76,27 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ForgotPasswordResponse> call, Response<ForgotPasswordResponse> response) {
                 if (response.isSuccessful()) {
+                    Log.d(TAG, "Request successful with code: " + response.code());
                     ForgotPasswordResponse forgotPasswordResponse = response.body();
                     if (forgotPasswordResponse != null) {
                         Intent intent = new Intent(ForgotPasswordActivity.this, OtpForgotPasswordActivity.class);
                         intent.putExtra("email", email);
                         startActivity(intent);
+                    } else {
+                        Log.e(TAG, "Response body is null despite successful response.");
+                        tvNotice.setText("Không nhận được phản hồi hợp lệ từ máy chủ.");
+                        tvNotice.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    // Xử lý thông báo lỗi
-                    Log.d(TAG, "onResponse: " + response.message());
+                    String errorBodyString = "";
+                    try {
+                        if (response.errorBody() != null) {
+                            errorBodyString = response.errorBody().string();
+                        }
+                    } catch (java.io.IOException e) {
+                        Log.e(TAG, "Error reading errorBody", e);
+                    }
+                    Log.e(TAG, "Request failed: " + response.code() + " " + response.message() + ", Body: " + errorBodyString);
                     tvNotice.setText("Kiểm tra lại địa chỉ email");
                     tvNotice.setVisibility(View.VISIBLE);
                 }
@@ -93,7 +104,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ForgotPasswordResponse> call, Throwable t) {
-                Log.e(TAG, "onFailure: " + t);
+                Log.e(TAG, "Request execution failed", t);
                 tvNotice.setText("Kiểm tra lại kết nối");
                 tvNotice.setVisibility(View.VISIBLE);
             }

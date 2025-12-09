@@ -34,12 +34,12 @@ public interface APIService {
 
     @POST("auth/forgot-password")
     Call<ForgotPasswordResponse> forgotPassword(@Body ForgotPasswordRequest request);
-//
-//    @POST("auth/reset-password-verify")
-//    Call<MessageResponse> verifyResetPasswordOtp(@Body VerifyOtpRequest request);
-//
-//    @POST("auth/reset-password-new")
-//    Call<MessageResponse> resetPassword(@Body ResetPasswordRequest request);
+
+    @POST("auth/reset-password-verify")
+    Call<ResetPasswordVerifyResponse> verifyResetPasswordOtp(@Body ResetPasswordVerifyRequest request);
+
+    @POST("auth/reset-password-new")
+    Call<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest request);
 //
 //    @POST("auth/resend-reset-otp")
 //    Call<MessageResponse> resendResetOtp(@Body ForgotPasswordRequest request);

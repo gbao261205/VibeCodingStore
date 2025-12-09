@@ -16,6 +16,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.vibecoding.flowerstore.R;
 import com.vibecoding.flowerstore.Service.APIService;
+import com.vibecoding.flowerstore.Service.ResetPasswordVerifyRequest;
+import com.vibecoding.flowerstore.Service.ResetPasswordVerifyResponse;
 import com.vibecoding.flowerstore.Service.RetrofitClient;
 import com.vibecoding.flowerstore.Service.VerifyOtpRequest;
 import com.vibecoding.flowerstore.Service.VerifyOtpResponse;
@@ -64,17 +66,18 @@ public class OtpForgotPasswordActivity extends AppCompatActivity {
         }
 
         APIService apiService = RetrofitClient.getClient().create(APIService.class);
-        VerifyOtpRequest verifyOtpRequest = new VerifyOtpRequest(username, otpCode);
+        ResetPasswordVerifyRequest resetPasswordVerifyRequest = new ResetPasswordVerifyRequest(email, otpCode);
 
-        Call<VerifyOtpResponse> call = apiService.verifyOtp(verifyOtpRequest);
+        Call<ResetPasswordVerifyResponse> call = apiService.verifyResetPasswordOtp(resetPasswordVerifyRequest);
 
-        call.enqueue(new Callback<VerifyOtpResponse>() {
+        call.enqueue(new Callback<ResetPasswordVerifyResponse>() {
             @Override
-            public void onResponse(Call<VerifyOtpResponse> call, retrofit2.Response<VerifyOtpResponse> response) {
+            public void onResponse(Call<ResetPasswordVerifyResponse> call, retrofit2.Response<ResetPasswordVerifyResponse> response) {
                 if (response.isSuccessful()) {
-                    VerifyOtpResponse verifyOtpResponse = response.body();
-                    if (verifyOtpResponse != null) {
-                        Intent intent = new Intent(OtpActivity.this, MainActivity.class);
+                    ResetPasswordVerifyResponse resetPasswordVerifyResponse = response.body();
+                    if (resetPasswordVerifyResponse != null) {
+                        Intent intent = new Intent(OtpForgotPasswordActivity.this, ChangePasswordActivity.class);
+                        intent.putExtra("email", email);
                         startActivity(intent);
                         finish();
                     } else {
@@ -98,7 +101,7 @@ public class OtpForgotPasswordActivity extends AppCompatActivity {
                 }
             }
             @Override
-            public void onFailure(Call<VerifyOtpResponse> call, Throwable t) {
+            public void onFailure(Call<ResetPasswordVerifyResponse> call, Throwable t) {
                 Log.e(TAG, "Lỗi xác thực OTP: " + t.getMessage());
                 tvNotice.setText("Xác thực thất bại. Vui lòng kiểm tra lại kết nối mạng.");
                 tvNotice.setVisibility(View.VISIBLE);

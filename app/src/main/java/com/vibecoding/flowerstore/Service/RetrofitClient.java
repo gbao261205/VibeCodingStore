@@ -10,41 +10,50 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
     private static final String BASE_URL = "https://holetinnghia-vibe-coding-store-api.hf.space/api/v1/";
 
-    // Tách thành 2 biến riêng biệt để không bị xung đột
-    private static Retrofit retrofitPublic; // Dùng cho Login, Register
-    private static Retrofit retrofitAuth;   // Dùng cho Cart, Order, Profile
+    private static Retrofit retrofitPublic;
+    private static Retrofit retrofitAuth;
 
-    // 1. Client cho API không cần Token (Login, Register...)
     public static Retrofit getClient(){
         if (retrofitPublic == null) {
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .addInterceptor(loggingInterceptor)
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .writeTimeout(30, TimeUnit.SECONDS)
+                    .build();
+
             retrofitPublic = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
+                    .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
         return retrofitPublic;
     }
 
-    // 2. Client cho API CẦN Token (Order, Cart...)
     public static Retrofit getClient(Context context) {
         if (retrofitAuth == null) {
-            // --- Cấu hình Interceptor ---
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
             Interceptor authInterceptor = new Interceptor() {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
                     Request originalRequest = chain.request();
 
-                    // Lấy token từ SharedPreferences
                     SharedPreferences prefs = context.getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE);
                     String token = prefs.getString("ACCESS_TOKEN", null);
 
-                    // Nếu có token thì gắn vào Header
                     if (token != null) {
                         Request newRequest = originalRequest.newBuilder()
                                 .header("Authorization", "Bearer " + token)
@@ -52,24 +61,21 @@ public class RetrofitClient {
                                 .build();
                         return chain.proceed(newRequest);
                     }
-
-                    // Không có token thì cứ gửi đi (phòng trường hợp logout hoặc lỗi)
                     return chain.proceed(originalRequest);
                 }
             };
 
-            // --- Cấu hình OkHttp ---
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .addInterceptor(authInterceptor)
+                    .addInterceptor(loggingInterceptor)
                     .connectTimeout(30, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS)
                     .writeTimeout(30, TimeUnit.SECONDS)
                     .build();
 
-            // --- Tạo Retrofit Auth ---
             retrofitAuth = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .client(okHttpClient) // Gắn client đã cấu hình
+                    .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }

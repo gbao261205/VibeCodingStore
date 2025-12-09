@@ -16,7 +16,7 @@
         android:theme="@style/Theme.FlowerStore"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".Activity.ChangePassword"
+            android:name=".Activity.ChangePasswordActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.OtpForgotPasswordActivity"
