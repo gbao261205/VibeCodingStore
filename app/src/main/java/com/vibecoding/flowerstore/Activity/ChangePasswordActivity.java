@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.vibecoding.flowerstore.R;
-import com.vibecoding.flowerstore.Service.APIService;
+import com.vibecoding.flowerstore.Service.ApiService;
 import com.vibecoding.flowerstore.Service.ChangePasswordRequest;
 import com.vibecoding.flowerstore.Service.ChangePasswordResponse;
 import com.vibecoding.flowerstore.Service.RetrofitClient;
@@ -61,7 +61,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     }
 
     private void changePassword(String email, String newPassword, String confirmPassword) {
-        APIService apiService = RetrofitClient.getClient().create(APIService.class);
+        ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
         ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest(email, newPassword, confirmPassword);
 
         Call<ChangePasswordResponse> call = apiService.changePassword(changePasswordRequest);

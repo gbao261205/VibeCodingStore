@@ -16,7 +16,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.vibecoding.flowerstore.R;
-import com.vibecoding.flowerstore.Service.APIService;
+import com.vibecoding.flowerstore.Service.ApiService;
 import com.vibecoding.flowerstore.Service.ResendOtpRequest;
 import com.vibecoding.flowerstore.Service.ResendOtpResponse;
 import com.vibecoding.flowerstore.Service.RetrofitClient;
@@ -69,7 +69,7 @@ public class OtpActivity extends AppCompatActivity {
             return;
         }
 
-        APIService apiService = RetrofitClient.getClient().create(APIService.class);
+        ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
         VerifyOtpRequest verifyOtpRequest = new VerifyOtpRequest(username, otpCode);
 
         Call<VerifyOtpResponse> call = apiService.verifyOtp(verifyOtpRequest);
@@ -113,7 +113,7 @@ public class OtpActivity extends AppCompatActivity {
     }
 
     private void ResendOtp() {
-        APIService apiService = RetrofitClient.getClient().create(APIService.class);
+        ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
         ResendOtpRequest resendOtpRequest = new ResendOtpRequest(username);
         Call<ResendOtpResponse> call = apiService.resendOtp(resendOtpRequest);
 

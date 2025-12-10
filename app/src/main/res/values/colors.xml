@@ -14,13 +14,8 @@
     <color name="bloom_text">#4A4A4A</color>
     <color name="bloom_text_hint">#804A4A4A</color>
     <color name="bloom_border">#E5E7EB</color>
-</resources>
     <color name="primary">#ef3985</color>
-    <color name="background_light">#f8f6f7</color>
     <color name="background_dark">#221018</color>
-    <color name="black">#000000</color>
-    <color name="text_dark">#221018</color>
     <color name="gray_text">#64748B</color>
-    <color name="white">#FFFFFF</color>
-    <color name="primary_pink">#FFC0CB</color>
-    <color name="text_color_dark">#1F2937</color> <color name="text_color_medium">#4B5563</color> </resources>
+    <color name="text_color_dark">#1F2937</color> <color name="text_color_medium">#4B5563</color>
+</resources>

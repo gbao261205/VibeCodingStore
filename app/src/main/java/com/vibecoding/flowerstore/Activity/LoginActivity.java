@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.vibecoding.flowerstore.R;
-import com.vibecoding.flowerstore.Service.APIService;
+import com.vibecoding.flowerstore.Service.ApiService;
 import com.vibecoding.flowerstore.Service.LoginRequest;
 import com.vibecoding.flowerstore.Service.LoginResponse;
 import com.vibecoding.flowerstore.Service.RetrofitClient;
@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void Login() {
-        APIService apiService = RetrofitClient.getClient().create(APIService.class);
+        ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
         LoginRequest loginRequest = new LoginRequest(edtUsername.getText().toString(), edtPassword.getText().toString());
 
         Call<LoginResponse> call = apiService.login(loginRequest);

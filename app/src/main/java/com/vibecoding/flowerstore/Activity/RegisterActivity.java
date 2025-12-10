@@ -17,7 +17,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.vibecoding.flowerstore.R;
-import com.vibecoding.flowerstore.Service.APIService;
+import com.vibecoding.flowerstore.Service.ApiService;
 import com.vibecoding.flowerstore.Service.RegisterRequest;
 import com.vibecoding.flowerstore.Service.RegisterResponse;
 import com.vibecoding.flowerstore.Service.RetrofitClient;
@@ -69,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void Register() {
-        APIService apiService = RetrofitClient.getClient().create(APIService.class);
+        ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
 
         RegisterRequest registerRequest = new RegisterRequest(edtUsername.getText().toString(), edtPassword.getText().toString(), edtEmail.getText().toString(), edtFullName.getText().toString(), edtPhoneNumber.getText().toString());
 

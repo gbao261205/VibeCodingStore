@@ -15,7 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.vibecoding.flowerstore.R;
-import com.vibecoding.flowerstore.Service.APIService;
+import com.vibecoding.flowerstore.Service.ApiService;
 import com.vibecoding.flowerstore.Service.ResendOtpForgotPassRequest;
 import com.vibecoding.flowerstore.Service.ResendOtpRequest;
 import com.vibecoding.flowerstore.Service.ResendOtpResponse;
@@ -72,7 +72,7 @@ public class OtpForgotPasswordActivity extends AppCompatActivity {
             return;
         }
 
-        APIService apiService = RetrofitClient.getClient().create(APIService.class);
+        ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
         ResetPasswordVerifyRequest resetPasswordVerifyRequest = new ResetPasswordVerifyRequest(email, otpCode);
 
         Call<ResetPasswordVerifyResponse> call = apiService.verifyResetPasswordOtp(resetPasswordVerifyRequest);
@@ -117,7 +117,7 @@ public class OtpForgotPasswordActivity extends AppCompatActivity {
     }
 
     private void resendOtp(){
-        APIService apiService = RetrofitClient.getClient().create(APIService.class);
+        ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
         ResendOtpForgotPassRequest resendOtpForgotPassRequest = new ResendOtpForgotPassRequest(email);
         Call<ResendOtpResponse> call = apiService.resendResetOtp(resendOtpForgotPassRequest);
 

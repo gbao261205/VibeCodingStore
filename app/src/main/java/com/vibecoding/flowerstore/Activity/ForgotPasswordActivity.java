@@ -16,7 +16,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.vibecoding.flowerstore.R;
-import com.vibecoding.flowerstore.Service.APIService;
+import com.vibecoding.flowerstore.Service.ApiService;
 import com.vibecoding.flowerstore.Service.ForgotPasswordRequest;
 import com.vibecoding.flowerstore.Service.ForgotPasswordResponse;
 import com.vibecoding.flowerstore.Service.RetrofitClient;
@@ -68,7 +68,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     private void ForgotPassword(String email) {
-        APIService apiService = RetrofitClient.getClient().create(APIService.class);
+        ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
 
         ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest(email);
         Call<ForgotPasswordResponse> call = apiService.forgotPassword(forgotPasswordRequest);

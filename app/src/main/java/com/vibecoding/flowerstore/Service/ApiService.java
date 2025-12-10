@@ -6,7 +6,9 @@ import com.vibecoding.flowerstore.Model.Category;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -35,8 +37,8 @@ public interface ApiService {
     Call<ApiResponse> getProductsByCategory(@Path("categorySlug") String slug);
 
 //    // ================== 1. AUTHENTICATION ==================
-//    @POST("auth/login")
-//    Call<JwtResponse> login(@Body LoginRequest request);
+    @POST("auth/login")
+    Call<LoginResponse> login(@Body LoginRequest request);
 //
 //    @POST("auth/logout")
 //    Call<MessageResponse> logout();
@@ -50,26 +52,26 @@ public interface ApiService {
 //    @POST("auth/refresh")
 //    Call<RefreshTokenResponse> refreshToken();
 //
-//    @POST("auth/register")
-//    Call<MessageResponse> register(@Body RegisterRequest request);
-//
-//    @POST("auth/verify-otp")
-//    Call<MessageResponse> verifyOtp(@Body VerifyOtpRequest request);
-//
-//    @POST("auth/resend-otp")
-//    Call<MessageResponse> resendOtp(@Body ResendOtpRequest request);
-//
-//    @POST("auth/forgot-password")
-//    Call<MessageResponse> forgotPassword(@Body ForgotPasswordRequest request);
-//
-//    @POST("auth/reset-password-verify")
-//    Call<MessageResponse> verifyResetPasswordOtp(@Body VerifyOtpRequest request);
-//
-//    @POST("auth/reset-password-new")
-//    Call<MessageResponse> resetPassword(@Body ResetPasswordRequest request);
-//
-//    @POST("auth/resend-reset-otp")
-//    Call<MessageResponse> resendResetOtp(@Body ForgotPasswordRequest request);
+    @POST("auth/register")
+Call<RegisterResponse> register(@Body RegisterRequest request);
+
+    @POST("auth/verify-otp")
+    Call<VerifyOtpResponse> verifyOtp(@Body VerifyOtpRequest request);
+
+    @POST("auth/resend-otp")
+    Call<ResendOtpResponse> resendOtp(@Body ResendOtpRequest request);
+
+    @POST("auth/forgot-password")
+    Call<ForgotPasswordResponse> forgotPassword(@Body ForgotPasswordRequest request);
+
+    @POST("auth/reset-password-verify")
+    Call<ResetPasswordVerifyResponse> verifyResetPasswordOtp(@Body ResetPasswordVerifyRequest request);
+
+    @POST("auth/reset-password-new")
+    Call<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest request);
+
+    @POST("auth/resend-reset-otp")
+    Call<ResendOtpResponse> resendResetOtp(@Body ResendOtpForgotPassRequest request);
 //
 //    // ================== 2. PRODUCTS ==================
 //    @GET("home/products")
