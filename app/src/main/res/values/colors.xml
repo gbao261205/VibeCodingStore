@@ -17,5 +17,11 @@
     <color name="primary">#ef3985</color>
     <color name="background_dark">#221018</color>
     <color name="gray_text">#64748B</color>
-    <color name="text_color_dark">#1F2937</color> <color name="text_color_medium">#4B5563</color>
+    <color name="text_color_dark">#1F2937</color>
+    <color name="text_color_medium">#4B5563</color>
+
+    <color name="text_primary">#1F2937</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="red_100">#FEE2E2</color>
+    <color name="red_600">#DC2626</color>
 </resources>

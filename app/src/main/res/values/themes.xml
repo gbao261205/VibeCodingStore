@@ -12,4 +12,17 @@
         <item name="android:windowContentOverlay">@null</item>
 
     </style>
+
+    <style name="ProfileButtonStyle" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@drawable/profile_button_bg</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:drawablePadding">16dp</item>
+    </style>
 </resources>

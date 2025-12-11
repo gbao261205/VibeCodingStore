@@ -41,6 +41,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation("com.google.android.material:material:1.9.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
 
     // Gson Converter - Chuyển đổi JSON sang Java Object
@@ -56,4 +58,5 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-viewmodel:2.7.0")
     // LiveData - Tạo data có thể quan sát được
     implementation("androidx.lifecycle:lifecycle-livedata:2.7.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }

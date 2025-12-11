@@ -1,14 +1,18 @@
 package com.vibecoding.flowerstore.Service;
 
 import com.vibecoding.flowerstore.Model.ApiResponse;
+import com.vibecoding.flowerstore.Model.CartDTO;
 import com.vibecoding.flowerstore.Model.Category;
+import com.vibecoding.flowerstore.Model.User;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -39,7 +43,9 @@ public interface ApiService {
 //    // ================== 1. AUTHENTICATION ==================
     @POST("auth/login")
     Call<LoginResponse> login(@Body LoginRequest request);
-//
+
+    @GET("profile")
+    Call<User> getProfile(@Header("Authorization") String authToken);
 //    @POST("auth/logout")
 //    Call<MessageResponse> logout();
 //
@@ -97,24 +103,24 @@ Call<RegisterResponse> register(@Body RegisterRequest request);
 //    Call<ProductDetailResponse> getProductDetail(@Path("id") int id);
 //
 //    // ================== 3. CART ==================
-//    @GET("cart")
-//    Call<CartDTO> getCart();
-//
-//    @POST("cart/add")
-//    Call<CartDTO> addToCart(
-//            @Query("productId") int productId,
-//            @Query("quantity") int quantity
-//    );
-//
-//    @PUT("cart/update-quantity")
-//    Call<CartDTO> updateCartQuantity(
-//            @Query("productId") int productId,
-//            @Query("quantity") int quantity
-//    );
-//
-//    @POST("cart/remove")
-//    Call<CartDTO> removeFromCart(@Query("productId") int productId);
-//
+    @GET("cart")
+    Call<CartDTO> getCart();
+
+    @POST("cart/add")
+    Call<CartDTO> addToCart(
+            @Query("productId") int productId,
+            @Query("quantity") int quantity
+    );
+
+    @PUT("cart/update-quantity")
+    Call<CartDTO> updateCartQuantity(
+            @Query("productId") int productId,
+            @Query("quantity") int quantity
+    );
+
+    @POST("cart/remove")
+    Call<CartDTO> removeFromCart(@Query("productId") int productId);
+
 //    // ================== 4. ORDERS ==================
 //    @GET("orders/checkout-details")
 //    Call<CheckoutDetailsResponse> getCheckoutDetails();
