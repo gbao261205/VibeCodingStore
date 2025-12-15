@@ -36,10 +36,10 @@ public interface ApiService {
     @GET("products/category/{categorySlug}")
     Call<ApiResponse> getProductsByCategory(@Path("categorySlug") String slug);
 
-//    // ================== 1. AUTHENTICATION ==================
+    //    // ================== 1. AUTHENTICATION ==================
     @POST("auth/login")
     Call<LoginResponse> login(@Body LoginRequest request);
-//
+    //
 //    @POST("auth/logout")
 //    Call<MessageResponse> logout();
 //
@@ -53,7 +53,7 @@ public interface ApiService {
 //    Call<RefreshTokenResponse> refreshToken();
 //
     @POST("auth/register")
-Call<RegisterResponse> register(@Body RegisterRequest request);
+    Call<RegisterResponse> register(@Body RegisterRequest request);
 
     @POST("auth/verify-otp")
     Call<VerifyOtpResponse> verifyOtp(@Body VerifyOtpRequest request);
