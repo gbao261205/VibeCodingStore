@@ -274,28 +274,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        Intent intent = null;
 
-        if (id == R.id.nav_categories) {
-            Intent intent = new Intent(this, CategoriesActivity.class);
-            startActivity(intent);
-            overridePendingTransition(0, 0); // Thêm cái này cho mượt
-
-        } else if (id == R.id.nav_favorites) {
-            Intent intent = new Intent(this, FavoriteActivity.class);
-            startActivity(intent);
-            overridePendingTransition(0, 0);
-
-        } else if (id == R.id.nav_account) {
-            Intent intent = new Intent(this, ProfileActivity.class);
-            startActivity(intent);
-            overridePendingTransition(0, 0);
-
-        } else if (id == R.id.button_cart) {
-            Intent intent = new Intent(this, CartActivity.class);
-            startActivity(intent);
-
-        } else if (id == R.id.nav_home) {
+        if (id == R.id.nav_home) {
             // Đang ở Home thì không làm gì
+            return;
+        }
+        else if (id == R.id.nav_categories) {
+            intent = new Intent(this, CategoriesActivity.class);
+        }
+        else if (id == R.id.nav_favorites) {
+            intent = new Intent(this, FavoriteActivity.class);
+        }
+        else if (id == R.id.nav_account) {
+            intent = new Intent(this, ProfileActivity.class);
+        }
+
+        // --- KHỐI LỆNH CHUYỂN TRANG KHÔNG HIỆU ỨNG (TAB STYLE) ---
+        if (intent != null) {
+            startActivity(intent);
+            // 1. Tắt hiệu ứng hiện lên của trang mới
+            overridePendingTransition(0, 0);
+
+            // 2. Nếu bạn muốn Home là gốc (không bao giờ finish) thì bỏ dòng này.
+            // Nhưng để mượt nhất và tiết kiệm RAM, ta nên finish() khi sang tab khác
+            // để tránh chồng Activity. Tuy nhiên, nếu user bấm Back ở trang kia sẽ thoát App.
+            // ==> Giải pháp tốt nhất cho TAB là cứ finish() để chuyển qua lại như Switch.
+            finish();
+
+            // 3. Tắt hiệu ứng biến mất của trang cũ
+            overridePendingTransition(0, 0);
         }
     }
 }

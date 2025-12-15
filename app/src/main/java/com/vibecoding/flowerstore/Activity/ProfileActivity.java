@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
+import com.vibecoding.flowerstore.Model.DataStore;
 import com.vibecoding.flowerstore.Model.User;
 import com.vibecoding.flowerstore.R;
 import com.vibecoding.flowerstore.Service.ApiService;
@@ -33,7 +34,7 @@ public class ProfileActivity extends AppCompatActivity {
     private MaterialButton orderHistoryButton, savedAddressesButton, paymentMethodsButton, helpSupportButton;
     private LinearLayout userInfoLayout;
     private LinearLayout navHome, navCategories, navFavorites, navAccount;
-    ImageView avatar;
+    private ImageView avatar;
 
     private static User cachedUser;
 
@@ -45,10 +46,13 @@ public class ProfileActivity extends AppCompatActivity {
         setupViews();
         setupNavigation();
 
-        avatar.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
-            startActivity(intent);
-        });
+        // Xử lý click Avatar
+        if (avatar != null) {
+            avatar.setOnClickListener(v -> {
+                Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
+                startActivity(intent);
+            });
+        }
     }
 
     @Override
@@ -74,23 +78,38 @@ public class ProfileActivity extends AppCompatActivity {
         navAccount = findViewById(R.id.nav_account);
     }
 
+    // --- ĐÂY LÀ PHẦN SỬA ĐỔI NAVIGATION ---
     private void setupNavigation() {
+        // 1. Về Trang Chủ: Cần finish() để xóa các trang cũ, tránh nặng máy
         navHome.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+            // Cờ này giúp xóa sạch các trang đang mở đè lên Home
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
-            overridePendingTransition(0, 0);
+            overridePendingTransition(0, 0); // Tắt hiệu ứng
             finish();
         });
+
+        // 2. Sang Danh Mục: KHÔNG finish(), chỉ thêm cờ SingleTop
         navCategories.setOnClickListener(v -> {
-            Intent intent = new Intent(this, CategoriesActivity.class);
-            startActivity(intent);
-            overridePendingTransition(0, 0); // Thêm cái này cho mượt
-        });
-        navFavorites.setOnClickListener(v ->{
-            Intent intent = new Intent(this, FavoriteActivity.class);
+            Intent intent = new Intent(ProfileActivity.this, CategoriesActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); // Tránh mở 2 lần trang giống nhau
             startActivity(intent);
             overridePendingTransition(0, 0);
+            // KHÔNG gọi finish() -> Trang cũ sẽ nằm dưới, tạo cảm giác mượt hơn
+        });
+
+        // 3. Sang Yêu Thích: KHÔNG finish()
+        navFavorites.setOnClickListener(v ->{
+            Intent intent = new Intent(ProfileActivity.this, FavoriteActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        });
+
+        // 4. Tài khoản (Đang ở đây rồi thì không làm gì hoặc reload)
+        navAccount.setOnClickListener(v -> {
+            // Không làm gì vì đang ở trang này
         });
     }
 
@@ -100,14 +119,11 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (token != null) {
             if (cachedUser != null) {
-                Log.d(TAG, "User profile found in cache. Displaying cached data.");
                 showLoggedInUI(cachedUser);
             } else {
-                Log.d(TAG, "Token found. Fetching user profile...");
                 fetchUserProfile("Bearer " + token);
             }
         } else {
-            Log.d(TAG, "No token found. Displaying guest UI.");
             showGuestUI();
         }
     }
@@ -122,39 +138,37 @@ public class ProfileActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     User user = response.body();
                     cachedUser = user;
-                    Log.d(TAG, "Profile fetched successfully: " + user.getFullName());
                     showLoggedInUI(user);
                 } else {
-                    Log.e(TAG, "Failed to fetch profile. Code: " + response.code());
                     handleAuthenticationError();
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Log.e(TAG, "API call failed: " + t.getMessage());
-                Toast.makeText(ProfileActivity.this, "Lỗi kết nối, không thể tải thông tin.", Toast.LENGTH_SHORT).show();
-                handleAuthenticationError();
+                Toast.makeText(ProfileActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                // Không auto logout khi lỗi mạng, chỉ báo lỗi thôi
             }
         });
     }
 
     private void showLoggedInUI(User user) {
-        userName.setText(user.getFullName());
-        if (user.getEmail() != null) {
+        if(userName != null) userName.setText(user.getFullName());
+
+        if (user.getEmail() != null && userEmail != null) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 userEmail.setText(Html.fromHtml(user.getEmail(), Html.FROM_HTML_MODE_LEGACY));
             } else {
                 userEmail.setText(Html.fromHtml(user.getEmail()));
             }
+            userEmail.setVisibility(View.VISIBLE);
         }
-        userEmail.setVisibility(View.VISIBLE);
 
-        orderHistoryButton.setVisibility(View.VISIBLE);
-        savedAddressesButton.setVisibility(View.VISIBLE);
-        paymentMethodsButton.setVisibility(View.VISIBLE);
-        helpSupportButton.setVisibility(View.VISIBLE);
-        logoutButton.setVisibility(View.VISIBLE);
+        if(orderHistoryButton != null) orderHistoryButton.setVisibility(View.VISIBLE);
+        if(savedAddressesButton != null) savedAddressesButton.setVisibility(View.VISIBLE);
+        if(paymentMethodsButton != null) paymentMethodsButton.setVisibility(View.VISIBLE);
+        if(helpSupportButton != null) helpSupportButton.setVisibility(View.VISIBLE);
+        if(logoutButton != null) logoutButton.setVisibility(View.VISIBLE);
 
         userInfoLayout.setClickable(true);
         userInfoLayout.setOnClickListener(v -> {
@@ -162,12 +176,12 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        logoutButton.setOnClickListener(v -> handleAuthenticationError());
+        if(logoutButton != null) logoutButton.setOnClickListener(v -> handleAuthenticationError());
     }
 
     private void showGuestUI() {
-        userName.setText("Xin hãy đăng nhập");
-        userEmail.setText("Chào mừng đến với Flower Store");
+        if(userName != null) userName.setText("Xin hãy đăng nhập");
+        if(userEmail != null) userEmail.setText("Chào mừng đến với Flower Store");
         cachedUser = null;
 
         userInfoLayout.setClickable(true);
@@ -175,6 +189,13 @@ public class ProfileActivity extends AppCompatActivity {
             Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
             startActivity(intent);
         });
+
+        // Ẩn các nút chức năng khi chưa login
+        if(orderHistoryButton != null) orderHistoryButton.setVisibility(View.GONE);
+        if(savedAddressesButton != null) savedAddressesButton.setVisibility(View.GONE);
+        if(paymentMethodsButton != null) paymentMethodsButton.setVisibility(View.GONE);
+        if(helpSupportButton != null) helpSupportButton.setVisibility(View.GONE);
+        if(logoutButton != null) logoutButton.setVisibility(View.GONE);
     }
 
     private void handleAuthenticationError() {
@@ -183,8 +204,16 @@ public class ProfileActivity extends AppCompatActivity {
         editor.remove("ACCESS_TOKEN");
         editor.apply();
 
-        Toast.makeText(this, "Phiên đăng nhập đã hết hạn", Toast.LENGTH_SHORT).show();
-        showGuestUI();
+        cachedUser = null; // Xóa cache user
+        DataStore.cachedFavorites = null; // Xóa cache yêu thích
+
+        Toast.makeText(this, "Đã đăng xuất", Toast.LENGTH_SHORT).show();
+
+        // Reset về Home hoặc Login
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 
     public static void invalidateProfileCache() {

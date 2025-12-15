@@ -140,25 +140,34 @@ public class CategoriesActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        Intent intent = null;
 
         if (id == R.id.nav_home) {
-            Intent intent = new Intent(this, MainActivity.class);
+            intent = new Intent(this, MainActivity.class);
+            // Dọn sạch back stack để khi back từ Home sẽ thoát app
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        else if (id == R.id.nav_categories) {
+            // Đang ở trang Categories rồi thì không làm gì cả
+            return;
+        }
+        else if (id == R.id.nav_favorites) {
+            intent = new Intent(this, FavoriteActivity.class);
+        }
+        else if (id == R.id.nav_account) {
+            intent = new Intent(this, ProfileActivity.class);
+        }
+
+        // --- KHỐI LỆNH CHUYỂN TRANG KHÔNG HIỆU ỨNG ---
+        if (intent != null) {
             startActivity(intent);
+            // 1. Tắt hiệu ứng khi trang MỚI hiện lên
             overridePendingTransition(0, 0);
+
+            // 2. Đóng trang hiện tại để không bị chồng trang
             finish();
 
-        } else if (id == R.id.nav_categories) {
-            // Đang ở đây rồi
-
-        } else if (id == R.id.nav_favorites) {
-            Intent intent = new Intent(this, FavoriteActivity.class);
-            startActivity(intent);
-            overridePendingTransition(0, 0);
-
-        } else if (id == R.id.nav_account) {
-            Intent intent = new Intent(this, ProfileActivity.class);
-            startActivity(intent);
+            // 3. Tắt hiệu ứng khi trang CŨ đóng lại
             overridePendingTransition(0, 0);
         }
     }
