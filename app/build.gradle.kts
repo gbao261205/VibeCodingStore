@@ -59,4 +59,6 @@ dependencies {
     // LiveData - Tạo data có thể quan sát được
     implementation("androidx.lifecycle:lifecycle-livedata:2.7.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    implementation("com.cloudinary:cloudinary-android:2.2.0")
 }

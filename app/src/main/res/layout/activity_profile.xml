@@ -39,10 +39,23 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <ProgressBar
+        android:id="@+id/profile_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/appbar"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:fillViewport="true"
+        android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintTop_toBottomOf="@id/appbar"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_bar">
 
@@ -131,11 +144,12 @@
                 app:icon="@drawable/ic_help_outline"
                 android:visibility="gone"/>
 
-            <Space
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="24dp" />
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/logout_button"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="match_parent"
@@ -143,6 +157,9 @@
                 android:backgroundTint="@color/red_100"
                 android:text="Đăng xuất"
                 android:textColor="@color/red_600"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:iconTint="@color/red_600"
                 app:icon="@drawable/ic_logout"
                 android:visibility="gone"/>
 

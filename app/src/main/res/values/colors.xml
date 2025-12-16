@@ -24,4 +24,14 @@
     <color name="text_secondary">#64748B</color>
     <color name="red_100">#FEE2E2</color>
     <color name="red_600">#DC2626</color>
+
+    <color name="profile_primary">#F5C4D3</color>
+    <color name="profile_bg">#f8f8f8</color>
+    <color name="profile_text_title">#333333</color>
+    <color name="profile_text_label">#333333</color>
+    <color name="profile_text_hint">#888888</color>
+    <color name="profile_input_bg">#FFFFFF</color>
+    <color name="profile_input_readonly">#F3F4F6</color>
+    <color name="profile_border">#E5E7EB</color>
+    <color name="profile_red">#EF4444</color>
 </resources>

@@ -2,8 +2,10 @@ package com.vibecoding.flowerstore.Model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 // This class represents the User object returned by the API
-public class User {
+public class User implements Serializable {
 
     @SerializedName("id")
     private int id;
