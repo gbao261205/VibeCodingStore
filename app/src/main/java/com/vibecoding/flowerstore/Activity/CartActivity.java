@@ -86,10 +86,7 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartL
             @Override
             public void onResponse(Call<CartDTO> call, Response<CartDTO> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    CartDTO cart = response.body();
-                    cartAdapter.updateData(cart.getItems());
-                    NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-                    totalAmountText.setText(currencyFormat.format(cart.getTotalAmount()));
+                    updateCartUI(response.body());
                 } else {
                     Toast.makeText(CartActivity.this, "Lỗi khi tải giỏ hàng", Toast.LENGTH_SHORT).show();
                 }
@@ -110,8 +107,8 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartL
         call.enqueue(new Callback<CartDTO>() {
             @Override
             public void onResponse(Call<CartDTO> call, Response<CartDTO> response) {
-                if (response.isSuccessful()) {
-                    fetchCart(); // Refresh cart
+                if (response.isSuccessful() && response.body() != null) {
+                    updateCartUI(response.body());
                 } else {
                     Toast.makeText(CartActivity.this, "Lỗi cập nhật số lượng", Toast.LENGTH_SHORT).show();
                 }
@@ -132,8 +129,8 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartL
         call.enqueue(new Callback<CartDTO>() {
             @Override
             public void onResponse(Call<CartDTO> call, Response<CartDTO> response) {
-                if (response.isSuccessful()) {
-                    fetchCart(); // Refresh cart
+                if (response.isSuccessful() && response.body() != null) {
+                    updateCartUI(response.body());
                 } else {
                     Toast.makeText(CartActivity.this, "Lỗi xóa sản phẩm", Toast.LENGTH_SHORT).show();
                 }
@@ -144,5 +141,11 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartL
                 Toast.makeText(CartActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void updateCartUI(CartDTO cart) {
+        cartAdapter.updateData(cart.getItems());
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        totalAmountText.setText(currencyFormat.format(cart.getTotalAmount()));
     }
 }

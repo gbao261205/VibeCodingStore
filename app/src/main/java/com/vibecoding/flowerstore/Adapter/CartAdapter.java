@@ -5,7 +5,7 @@ import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -82,6 +82,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 listener.onRemoveItem(product.getId());
             }
         });
+
+        holder.deleteButton.setOnClickListener(v -> {
+            listener.onRemoveItem(product.getId());
+        });
     }
 
     @Override
@@ -97,7 +101,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     public static class CartViewHolder extends RecyclerView.ViewHolder {
         ImageView productImage;
         TextView productName, productPrice, quantityText;
-        Button increaseButton, decreaseButton;
+        ImageButton increaseButton, decreaseButton, deleteButton;
 
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -107,6 +111,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             quantityText = itemView.findViewById(R.id.quantity_text);
             increaseButton = itemView.findViewById(R.id.increase_button);
             decreaseButton = itemView.findViewById(R.id.decrease_button);
+            deleteButton = itemView.findViewById(R.id.delete_button);
         }
     }
 }
