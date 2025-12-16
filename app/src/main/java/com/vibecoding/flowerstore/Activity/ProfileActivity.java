@@ -31,7 +31,7 @@ public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
     private TextView userName, userEmail;
     private Button logoutButton;
-    private MaterialButton orderHistoryButton, savedAddressesButton, paymentMethodsButton, helpSupportButton;
+    private MaterialButton orderHistoryButton, savedAddressesButton, paymentMethodsButton, helpSupportButton, cartButton;
     private LinearLayout userInfoLayout;
     private LinearLayout navHome, navCategories, navFavorites, navAccount;
     private ImageView avatar;
@@ -69,6 +69,7 @@ public class ProfileActivity extends AppCompatActivity {
         savedAddressesButton = findViewById(R.id.saved_addresses_button);
         paymentMethodsButton = findViewById(R.id.payment_methods_button);
         helpSupportButton = findViewById(R.id.help_support_button);
+        cartButton = findViewById(R.id.cart_button);
         userInfoLayout = findViewById(R.id.user_info_layout);
         avatar = findViewById(R.id.avatar);
 
@@ -76,6 +77,11 @@ public class ProfileActivity extends AppCompatActivity {
         navCategories = findViewById(R.id.nav_categories);
         navFavorites = findViewById(R.id.nav_favorites);
         navAccount = findViewById(R.id.nav_account);
+
+        cartButton.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileActivity.this, CartActivity.class);
+            startActivity(intent);
+        });
     }
 
     // --- ĐÂY LÀ PHẦN SỬA ĐỔI NAVIGATION ---
@@ -168,6 +174,7 @@ public class ProfileActivity extends AppCompatActivity {
         if(savedAddressesButton != null) savedAddressesButton.setVisibility(View.VISIBLE);
         if(paymentMethodsButton != null) paymentMethodsButton.setVisibility(View.VISIBLE);
         if(helpSupportButton != null) helpSupportButton.setVisibility(View.VISIBLE);
+        if(cartButton != null) cartButton.setVisibility(View.VISIBLE);
         if(logoutButton != null) logoutButton.setVisibility(View.VISIBLE);
 
         userInfoLayout.setClickable(true);
@@ -195,6 +202,7 @@ public class ProfileActivity extends AppCompatActivity {
         if(savedAddressesButton != null) savedAddressesButton.setVisibility(View.GONE);
         if(paymentMethodsButton != null) paymentMethodsButton.setVisibility(View.GONE);
         if(helpSupportButton != null) helpSupportButton.setVisibility(View.GONE);
+        if(cartButton != null) cartButton.setVisibility(View.GONE);
         if(logoutButton != null) logoutButton.setVisibility(View.GONE);
     }
 

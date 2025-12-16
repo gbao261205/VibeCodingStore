@@ -123,6 +123,15 @@
                 android:visibility="gone"/>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/cart_button"
+                style="@style/ProfileButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Giỏ hàng"
+                app:icon="@drawable/ic_shopping_cart"
+                android:visibility="gone"/>
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/help_support_button"
                 style="@style/ProfileButtonStyle"
                 android:layout_width="match_parent"
