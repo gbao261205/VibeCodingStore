@@ -12,6 +12,8 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.view.View;
@@ -65,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title not the title bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//int flag, int mask
         setContentView(R.layout.activity_main);
 
         setupViews();
@@ -288,6 +292,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         else if (id == R.id.nav_account) {
             intent = new Intent(this, ProfileActivity.class);
+        }
+        else if (id == R.id.button_cart) {
+            intent = new Intent(this, CartActivity.class);
         }
 
         // --- KHỐI LỆNH CHUYỂN TRANG KHÔNG HIỆU ỨNG (TAB STYLE) ---
