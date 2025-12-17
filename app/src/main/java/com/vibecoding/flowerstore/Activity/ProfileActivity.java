@@ -42,7 +42,6 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView avatar;
     private ProgressBar progressBar;
     private ScrollView scrollView;
-
     private static User cachedUser;
 
     @Override
@@ -59,6 +58,7 @@ public class ProfileActivity extends AppCompatActivity {
         if (avatar != null) {
             avatar.setOnClickListener(v -> {
                 Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
+                intent.putExtra("user", cachedUser);
                 startActivity(intent);
             });
         }
@@ -238,6 +238,7 @@ public class ProfileActivity extends AppCompatActivity {
         paymentMethodsButton.setVisibility(View.GONE);
         helpSupportButton.setVisibility(View.GONE);
         logoutButton.setVisibility(View.GONE);
+        cartButton.setVisibility(View.GONE);
 
         userInfoLayout.setClickable(true);
         userInfoLayout.setOnClickListener(v -> {
