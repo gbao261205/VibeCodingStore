@@ -41,8 +41,13 @@ public class OrderHistoryActivity extends AppCompatActivity {
     private static User cachedUser;
 
     // Biến lưu trữ TOÀN BỘ đơn hàng tạm thời trong Activity
-    // Khi thoát Activity, biến này sẽ được giải phóng
     private List<OrderDTO> masterOrderList = new ArrayList<>();
+
+    // Biến lưu trạng thái người dùng MUỐN lọc khi dữ liệu chưa tải xong
+    private String pendingFilterStatus = null;
+    
+    // Biến kiểm tra xem API có đang chạy không
+    private boolean isLoading = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +79,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
             if (id == R.id.chipAll) {
                 filterOrdersLocal(null);
             } else if (id == R.id.chipPending) {
-                filterOrdersLocal("PENDING"); // Hoặc trạng thái "PROCESSING" tùy backend của bạn
+                filterOrdersLocal("PENDING"); 
             } else if (id == R.id.chipCompleted) {
                 filterOrdersLocal("COMPLETED");
             } else if (id == R.id.chipCancelled) {
@@ -97,7 +102,6 @@ public class OrderHistoryActivity extends AppCompatActivity {
         }
         userToken = "Bearer " + rawToken;
         
-        // Nếu đã có thông tin user trong cache, có thể sử dụng luôn
         if (cachedUser != null) {
              Log.d(TAG, "User profile found in cache: " + cachedUser.getFullName());
         } else {
@@ -139,6 +143,9 @@ public class OrderHistoryActivity extends AppCompatActivity {
 
     // Hàm gọi API lấy tất cả đơn hàng
     private void fetchAllOrdersFromServer() {
+        if (isLoading) return; // Nếu đang tải rồi thì không gọi lại
+
+        isLoading = true;
         progressBar.setVisibility(View.VISIBLE);
         rvOrderHistory.setVisibility(View.GONE);
 
@@ -148,6 +155,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<OrderDTO>>() {
             @Override
             public void onResponse(Call<List<OrderDTO>> call, Response<List<OrderDTO>> response) {
+                isLoading = false;
                 progressBar.setVisibility(View.GONE);
                 rvOrderHistory.setVisibility(View.VISIBLE);
 
@@ -155,8 +163,18 @@ public class OrderHistoryActivity extends AppCompatActivity {
                     // Lưu vào biến tạm thời
                     masterOrderList = response.body();
                     
-                    // Hiển thị tất cả mặc định ban đầu
-                    orderAdapter.setOrderList(masterOrderList);
+                    // KIỂM TRA: Có yêu cầu lọc nào đang chờ không?
+                    if (pendingFilterStatus != null) {
+                        Log.d(TAG, "Applying pending filter: " + pendingFilterStatus);
+                        // Thực hiện lọc theo yêu cầu chờ
+                        filterOrdersLocal(pendingFilterStatus);
+                        // Reset pending status (vì mình dùng UI chip selection để control, 
+                        // nhưng reset ở đây để tránh tự động filter lần sau nếu refresh)
+                        // Tuy nhiên, logic filterOrdersLocal sẽ handle việc hiển thị.
+                    } else {
+                        // Nếu không có yêu cầu nào, hiển thị tất cả
+                        orderAdapter.setOrderList(masterOrderList);
+                    }
 
                     if (masterOrderList.isEmpty()) {
                         Toast.makeText(OrderHistoryActivity.this, "Bạn chưa có đơn hàng nào", Toast.LENGTH_SHORT).show();
@@ -171,6 +189,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<OrderDTO>> call, Throwable t) {
+                isLoading = false;
                 progressBar.setVisibility(View.GONE);
                 rvOrderHistory.setVisibility(View.VISIBLE);
                 Log.e("OrderHistory", "Error: " + t.getMessage());
@@ -179,12 +198,28 @@ public class OrderHistoryActivity extends AppCompatActivity {
         });
     }
 
-    // Hàm lọc nội bộ, không gọi API
+    // Hàm lọc nội bộ
     private void filterOrdersLocal(String status) {
-        // Nếu danh sách gốc chưa có dữ liệu thì không làm gì
+        // Nếu danh sách gốc CHƯA có dữ liệu
         if (masterOrderList == null || masterOrderList.isEmpty()) {
+            // Lưu lại mong muốn của người dùng
+            pendingFilterStatus = status;
+            
+            // Nếu API chưa chạy (hoặc bị lỗi trước đó), hãy gọi lại API
+            if (!isLoading) {
+                fetchAllOrdersFromServer();
+            } else {
+                // Nếu đang loading (isLoading = true), chỉ cần đợi
+                // Khi onResponse chạy xong, nó sẽ kiểm tra pendingFilterStatus
+                // và tự động filter cho user.
+                Toast.makeText(this, "Đang tải dữ liệu...", Toast.LENGTH_SHORT).show();
+            }
             return;
         }
+
+        // Nếu dữ liệu đã có sẵn, thực hiện lọc ngay lập tức
+        // Reset pending status vì yêu cầu đã được đáp ứng
+        pendingFilterStatus = null;
 
         // Nếu status là null -> hiển thị tất cả
         if (status == null) {
