@@ -55,13 +55,17 @@ public class ProfileActivity extends AppCompatActivity {
         setupNavigation();
 
         // Xử lý click Avatar
-        if (avatar != null) {
-            avatar.setOnClickListener(v -> {
+        avatar.setOnClickListener(v -> {
+            if (cachedUser != null) {
                 Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
                 intent.putExtra("user", cachedUser);
                 startActivity(intent);
-            });
-        }
+            }
+            else {
+                Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

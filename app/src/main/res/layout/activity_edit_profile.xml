@@ -35,7 +35,8 @@
             android:gravity="center"
             android:text="Hồ sơ Cá nhân"
             android:textColor="@color/profile_text_title"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold"/>
     </LinearLayout>
 
     <ScrollView
