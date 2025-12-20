@@ -50,7 +50,8 @@
             android:paddingHorizontal="16dp"
             app:singleSelection="true"
             app:selectionRequired="true"
-            android:layout_gravity="center">
+            app:singleLine="true"
+            android:layout_gravity="center_vertical">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipAll"
@@ -61,25 +62,53 @@
                 android:checked="true"/>
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/chipPending"
+                android:id="@+id/chipNew"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Đang xử lý" />
+                android:text="Đơn hàng mới" />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/chipCompleted"
+                android:id="@+id/chipWaitConfirm"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Đã giao" />
+                android:text="Chờ xác nhận" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipWaitPickup"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chờ lấy hàng" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipDelivering"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đang giao" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipSuccess"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giao thành công" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipFail"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giao thất bại" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipCancelled"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Đã huỷ" />
+                android:text="Đã hủy" />
 
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>

@@ -11,13 +11,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide; // Cần thêm dependency Glide vào build.gradle
+import com.bumptech.glide.Glide;
 import com.vibecoding.flowerstore.Model.OrderDTO;
 import com.vibecoding.flowerstore.Model.OrderDetailDTO;
 import com.vibecoding.flowerstore.R;
 
 import java.text.NumberFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,24 +54,23 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         String formattedPrice = currencyFormat.format(order.getTotalAmount());
         holder.tvTotalAmount.setText("Tổng tiền: " + formattedPrice);
 
-        // 3. Set Date (Xử lý đơn giản chuỗi LocalDateTime)
+        // 3. Set Date
         if (order.getCreatedAt() != null) {
-            // Giả sử createdAt là String hoặc Object toString trả về dạng ISO
-            // Bạn có thể dùng DateTimeFormatter nếu minSdk >= 26
-            holder.tvOrderDate.setText("Ngày đặt: " + order.getCreatedAt().toString().substring(0, 10));
+            String dateStr = order.getCreatedAt().toString();
+            holder.tvOrderDate.setText("Ngày đặt: " + (dateStr.length() >= 10 ? dateStr.substring(0, 10) : dateStr));
         }
 
         // 4. Set Status & Color
-        String status = order.getStatus(); // PENDING, COMPLETED, CANCELLED, etc.
+        String status = order.getStatus();
         updateStatusView(holder.tvStatus, status);
 
-        // 5. Load Image (Lấy ảnh từ sản phẩm đầu tiên trong chi tiết đơn hàng)
+        // 5. Load Image
         if (order.getOrderDetails() != null && !order.getOrderDetails().isEmpty()) {
             OrderDetailDTO firstItem = order.getOrderDetails().get(0);
             if (firstItem.getProduct() != null) {
                 Glide.with(context)
                         .load(firstItem.getProduct().getImageUrl())
-                        .placeholder(R.drawable.ic_launcher_background) // Ảnh mặc định
+                        .placeholder(R.drawable.ic_launcher_background)
                         .into(holder.imgProduct);
             }
         }
@@ -81,27 +79,46 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     private void updateStatusView(TextView tv, String status) {
         if (status == null) return;
 
+        // Set text đúng theo status từ database
+        tv.setText(status);
+
         switch (status) {
-            case "COMPLETED":
-            case "DELIVERED":
-                tv.setText("Đã giao");
-                tv.setBackgroundResource(R.drawable.bg_status_green);
-                tv.setTextColor(Color.parseColor("#166534")); // Green 800
-                break;
-            case "PENDING":
-            case "PENDING_PAYMENT":
-            case "IN_DELIVERY":
-                tv.setText(status.equals("IN_DELIVERY") ? "Đang giao" : "Đang xử lý");
+            case "Đơn hàng mới":
                 tv.setBackgroundResource(R.drawable.bg_status_orange);
-                tv.setTextColor(Color.parseColor("#9A3412")); // Orange 800
+                tv.setTextColor(Color.parseColor("#9A3412"));
                 break;
-            case "CANCELLED":
-                tv.setText("Đã huỷ");
+
+            case "Chờ xác nhận":
+                tv.setBackgroundResource(R.drawable.bg_status_orange);
+                tv.setTextColor(Color.parseColor("#9A3412"));
+                break;
+
+            case "Chờ lấy hàng":
+                tv.setBackgroundResource(R.drawable.bg_status_orange);
+                tv.setTextColor(Color.parseColor("#9A3412"));
+                break;
+
+            case "Đang giao":
+                tv.setBackgroundResource(R.drawable.bg_status_orange);
+                tv.setTextColor(Color.parseColor("#9A3412"));
+                break;
+
+            case "Giao thành công":
+                tv.setBackgroundResource(R.drawable.bg_status_green);
+                tv.setTextColor(Color.parseColor("#166534"));
+                break;
+
+            case "Giao thất bại":
                 tv.setBackgroundResource(R.drawable.bg_status_gray);
-                tv.setTextColor(Color.parseColor("#374151")); // Gray 700
+                tv.setTextColor(Color.parseColor("#374151"));
                 break;
+
+            case "Đã hủy":
+                tv.setBackgroundResource(R.drawable.bg_status_gray);
+                tv.setTextColor(Color.parseColor("#374151"));
+                break;
+
             default:
-                tv.setText(status);
                 tv.setBackgroundResource(R.drawable.bg_status_gray);
                 tv.setTextColor(Color.BLACK);
                 break;

@@ -78,12 +78,20 @@ public class OrderHistoryActivity extends AppCompatActivity {
             int id = checkedIds.get(0);
             if (id == R.id.chipAll) {
                 filterOrdersLocal(null);
-            } else if (id == R.id.chipPending) {
-                filterOrdersLocal("PENDING"); 
-            } else if (id == R.id.chipCompleted) {
-                filterOrdersLocal("COMPLETED");
+            } else if (id == R.id.chipNew) {
+                filterOrdersLocal("Đơn hàng mới");
+            } else if (id == R.id.chipWaitConfirm) {
+                filterOrdersLocal("Chờ xác nhận");
+            } else if (id == R.id.chipWaitPickup) {
+                filterOrdersLocal("Chờ lấy hàng");
+            } else if (id == R.id.chipDelivering) {
+                filterOrdersLocal("Đang giao");
+            } else if (id == R.id.chipSuccess) {
+                filterOrdersLocal("Giao thành công");
+            } else if (id == R.id.chipFail) {
+                filterOrdersLocal("Giao thất bại");
             } else if (id == R.id.chipCancelled) {
-                filterOrdersLocal("CANCELLED");
+                filterOrdersLocal("Đã huỷ");
             }
         });
 
