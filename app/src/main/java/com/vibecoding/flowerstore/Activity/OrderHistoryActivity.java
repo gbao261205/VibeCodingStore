@@ -51,6 +51,9 @@ public class OrderHistoryActivity extends AppCompatActivity {
     // Biến kiểm tra xem API có đang chạy không
     private boolean isLoading = false, statusOrderHistory = true;
 
+    // Biến để quản lý Toast, tránh hiện trùng lặp
+    private Toast mToast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,7 +111,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
         String rawToken = prefs.getString("ACCESS_TOKEN", null);
 
         if (rawToken == null) {
-            Toast.makeText(this, "Vui lòng đăng nhập để xem lịch sử", Toast.LENGTH_SHORT).show();
+            showToast("Vui lòng đăng nhập để xem lịch sử");
             finish(); 
             return;
         }
@@ -149,7 +152,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
         editor.apply();
 
         cachedUser = null;
-        Toast.makeText(this, "Phiên đăng nhập đã hết hạn", Toast.LENGTH_SHORT).show();
+        showToast("Phiên đăng nhập đã hết hạn");
         finish();
     }
 
@@ -189,11 +192,11 @@ public class OrderHistoryActivity extends AppCompatActivity {
                     }
 
                     if (masterOrderList.isEmpty()) {
-                        Toast.makeText(OrderHistoryActivity.this, "Bạn chưa có đơn hàng nào", Toast.LENGTH_SHORT).show();
+                        showToast("Bạn chưa có đơn hàng nào");
                         statusOrderHistory = false;
                     }
                 } else {
-                    Toast.makeText(OrderHistoryActivity.this, "Lỗi tải dữ liệu: " + response.code(), Toast.LENGTH_SHORT).show();
+                    showToast("Lỗi tải dữ liệu: " + response.code());
                      if (response.code() == 401 || response.code() == 403) {
                          handleAuthenticationError();
                      }
@@ -206,14 +209,14 @@ public class OrderHistoryActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 rvOrderHistory.setVisibility(View.VISIBLE);
                 Log.e("OrderHistory", "Error: " + t.getMessage());
-                Toast.makeText(OrderHistoryActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                showToast("Lỗi kết nối: " + t.getMessage());
             }
         });
     }
 
     // Hàm lọc nội bộ
     private void filterOrdersLocal(String status) {
-        // Nếu danh sách gốc CHƯA có dữ liệu
+        // Nếu danh sách gốc CHƯA có dữ liệu và trạng thái lịch sử đơn hàng là có
         if ((masterOrderList == null || masterOrderList.isEmpty()) && statusOrderHistory) {
             // Lưu lại mong muốn của người dùng
             pendingFilterStatus = status;
@@ -225,7 +228,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
                 // Nếu đang loading (isLoading = true), chỉ cần đợi
                 // Khi onResponse chạy xong, nó sẽ kiểm tra pendingFilterStatus
                 // và tự động filter cho user.
-                Toast.makeText(this, "Đang tải dữ liệu...", Toast.LENGTH_SHORT).show();
+                showToast("Đang tải dữ liệu...");
             }
             return;
         }
@@ -252,8 +255,17 @@ public class OrderHistoryActivity extends AppCompatActivity {
         // Cập nhật RecyclerView
         orderAdapter.setOrderList(filteredList);
         
-        if (filteredList.isEmpty()) {
-            Toast.makeText(this, "Không có đơn hàng nào ở trạng thái này", Toast.LENGTH_SHORT).show();
+        if (filteredList.isEmpty() && statusOrderHistory) {
+            showToast("Không có đơn hàng nào ở trạng thái này");
         }
+    }
+
+    // Hàm helper để hiển thị Toast duy nhất
+    private void showToast(String message) {
+        if (mToast != null) {
+            mToast.cancel();
+        }
+        mToast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        mToast.show();
     }
 }
