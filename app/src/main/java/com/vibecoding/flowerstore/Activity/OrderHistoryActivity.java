@@ -47,7 +47,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
     private String pendingFilterStatus = null;
     
     // Biến kiểm tra xem API có đang chạy không
-    private boolean isLoading = false;
+    private boolean isLoading = false, statusOrderHistory = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +186,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
 
                     if (masterOrderList.isEmpty()) {
                         Toast.makeText(OrderHistoryActivity.this, "Bạn chưa có đơn hàng nào", Toast.LENGTH_SHORT).show();
+                        statusOrderHistory = false;
                     }
                 } else {
                     Toast.makeText(OrderHistoryActivity.this, "Lỗi tải dữ liệu: " + response.code(), Toast.LENGTH_SHORT).show();
@@ -209,7 +210,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
     // Hàm lọc nội bộ
     private void filterOrdersLocal(String status) {
         // Nếu danh sách gốc CHƯA có dữ liệu
-        if (masterOrderList == null || masterOrderList.isEmpty()) {
+        if ((masterOrderList == null || masterOrderList.isEmpty()) && statusOrderHistory) {
             // Lưu lại mong muốn của người dùng
             pendingFilterStatus = status;
             
