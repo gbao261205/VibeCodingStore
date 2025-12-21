@@ -18,6 +18,9 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:fullBackupContent">
         <activity
+            android:name=".Activity.AddressActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.OrderDetailActivity"
             android:exported="false" />
         <activity

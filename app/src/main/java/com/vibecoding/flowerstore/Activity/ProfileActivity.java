@@ -102,6 +102,11 @@ public class ProfileActivity extends AppCompatActivity {
             Intent intent = new Intent(ProfileActivity.this, OrderHistoryActivity.class);
             startActivity(intent);
         });
+
+        savedAddressesButton.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileActivity.this, AddressActivity.class);
+            startActivity(intent);
+        });
     }
 
     // --- ĐÂY LÀ PHẦN SỬA ĐỔI NAVIGATION ---
