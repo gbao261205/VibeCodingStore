@@ -1,5 +1,6 @@
 package com.vibecoding.flowerstore.Service;
 
+import com.vibecoding.flowerstore.Model.AddressDTO;
 import com.vibecoding.flowerstore.Model.ApiResponse;
 import com.vibecoding.flowerstore.Model.CartDTO;
 import com.vibecoding.flowerstore.Model.Category;
@@ -152,9 +153,9 @@ public interface ApiService {
     );
 //
 //    // ================== 5. ADDRESSES ==================
-//    @GET("addresses")
-//    Call<List<AddressDTO>> getAddresses();
-//
+    @GET("addresses")
+    Call<List<AddressDTO>> getAddresses(@Header("Authorization") String authToken);
+
 //    @GET("addresses/{id}")
 //    Call<AddressDTO> getAddressById(@Path("id") int id);
 //
