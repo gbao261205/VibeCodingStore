@@ -91,7 +91,8 @@
                                 android:id="@+id/edtName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:inputType="textPersonName" />
+                                android:inputType="textPersonName"
+                                android:textColor="@color/text_dark"/>
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
@@ -107,7 +108,8 @@
                                 android:id="@+id/edtPhone"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:inputType="phone" />
+                                android:inputType="phone"
+                                android:textColor="@color/text_dark"/>
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -146,7 +148,8 @@
                                 android:id="@+id/edtCity"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:inputType="textPostalAddress" />
+                                android:inputType="textPostalAddress"
+                                android:textColor="@color/text_dark"/>
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
@@ -163,7 +166,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="100dp"
                                 android:gravity="top|start"
-                                android:inputType="textMultiLine" />
+                                android:inputType="textMultiLine"
+                                android:textColor="@color/text_dark"/>
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <LinearLayout
