@@ -5,9 +5,11 @@ import com.vibecoding.flowerstore.Model.ApiResponse;
 import com.vibecoding.flowerstore.Model.CartDTO;
 import com.vibecoding.flowerstore.Model.Category;
 import com.vibecoding.flowerstore.Model.OrderDTO;
+import com.vibecoding.flowerstore.Model.ProductDTO;
 import com.vibecoding.flowerstore.Model.User;
 
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -94,8 +96,8 @@ public interface ApiService {
     Call<ResendOtpResponse> resendResetOtp(@Body ResendOtpForgotPassRequest request);
 //
 //    // ================== 2. PRODUCTS ==================
-//    @GET("home/products")
-//    Call<Map<String, List<ProductDTO>>> getHomeProducts();
+    @GET("home/products")
+    Call<Map<String, List<ProductDTO>>> getHomeProducts();
 //
 //    @GET("products/category/{categorySlug}")
 //    Call<PageResponse<ProductDTO>> getProductsByCategory(

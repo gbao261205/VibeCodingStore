@@ -118,15 +118,11 @@
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/view_pager_image_slider"
                     android:layout_width="match_parent"
-                    android:layout_height="320dp"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="0dp"
+                    android:layout_height="180dp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
-
-                <!-- Bạn có thể giữ lại banner_dots nếu muốn, và cập nhật nó bằng code -->
                 <LinearLayout
                     android:id="@+id/banner_dots"
                     android:layout_width="wrap_content"
@@ -137,11 +133,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent">
-                    <!-- Các dots sẽ được thêm vào bằng code -->
                 </LinearLayout>
-
             </androidx.constraintlayout.widget.ConstraintLayout>
-            <!-- KẾT THÚC THAY ĐỔI -->
 
             <TextView
                 android:layout_width="wrap_content"
@@ -179,6 +172,67 @@
                 android:paddingTop="24dp"
                 android:paddingBottom="8dp"/>
 
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmer_view_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:visibility="visible"
+                app:shimmer_duration="1000"> <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:baselineAligned="false"> <include
+                    layout="@layout/item_product_placeholder"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                    <View
+                        android:layout_width="12dp"
+                        android:layout_height="1dp" />
+
+                    <include
+                        layout="@layout/item_product_placeholder"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="16dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:baselineAligned="false">
+
+                    <include
+                        layout="@layout/item_product_placeholder"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <View
+                        android:layout_width="12dp"
+                        android:layout_height="1dp" />
+
+                    <include
+                        layout="@layout/item_product_placeholder"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+            </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_products"
                 android:layout_width="match_parent"
@@ -187,6 +241,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:layout_marginBottom="24dp"
+                android:visibility="gone"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:spanCount="2"
                 tools:itemCount="4"
@@ -207,104 +262,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
-            android:id="@+id/nav_home"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:paddingTop="8dp"
-            android:clickable="true"
-            android:focusable="true">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_home_filled"
-                android:contentDescription="Trang chủ"
-                app:tint="#ef3985" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Trang chủ"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                android:textColor="#ef3985"/>
+        <LinearLayout android:id="@+id/nav_home" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:paddingTop="8dp" android:clickable="true" android:focusable="true">
+            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_home_filled" app:tint="#ef3985" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Trang chủ" android:textSize="10sp" android:textStyle="bold" android:textColor="#ef3985"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/nav_categories"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:paddingTop="8dp"
-            android:clickable="true"
-            android:focusable="true">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_grid_view"
-                android:contentDescription="Danh mục"
-                app:tint="#896172" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Danh mục"
-                android:textSize="10sp"
-                android:textStyle="normal"
-                android:textColor="#896172"/>
+        <LinearLayout android:id="@+id/nav_categories" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:paddingTop="8dp" android:clickable="true" android:focusable="true">
+            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_grid_view" app:tint="#896172" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Danh mục" android:textSize="10sp" android:textColor="#896172"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/nav_favorites"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:paddingTop="8dp"
-            android:clickable="true"
-            android:focusable="true">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_favorite"
-                android:contentDescription="Yêu thích"
-                app:tint="#896172" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Yêu thích"
-                android:textSize="10sp"
-                android:textStyle="normal"
-                android:textColor="#896172"/>
+        <LinearLayout android:id="@+id/nav_favorites" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:paddingTop="8dp" android:clickable="true" android:focusable="true">
+            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_favorite" app:tint="#896172" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Yêu thích" android:textSize="10sp" android:textColor="#896172"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/nav_account"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:paddingTop="8dp"
-            android:clickable="true"
-            android:focusable="true">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_person"
-                android:contentDescription="Tài khoản"
-                app:tint="#896172" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tài khoản"
-                android:textSize="10sp"
-                android:textStyle="normal"
-                android:textColor="#896172"/>
+        <LinearLayout android:id="@+id/nav_account" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:paddingTop="8dp" android:clickable="true" android:focusable="true">
+            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_person" app:tint="#896172" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tài khoản" android:textSize="10sp" android:textColor="#896172"/>
         </LinearLayout>
     </LinearLayout>
 

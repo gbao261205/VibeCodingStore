@@ -61,4 +61,6 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     implementation("com.cloudinary:cloudinary-android:2.2.0")
+
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
 }
