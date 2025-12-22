@@ -14,6 +14,7 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
@@ -165,8 +166,8 @@ public interface ApiService {
     @PUT("addresses/{id}")
     Call<MessageResponse> updateAddress(@Path("id") int id, @Body AddressDTO request);
 //
-//    @DELETE("addresses/{id}")
-//    Call<MessageResponse> deleteAddress(@Path("id") int id);
+    @DELETE("addresses/{id}")
+    Call<MessageResponse> deleteAddress(@Path("id") int id);
 //
 //    // ================== 6. REVIEWS ==================
 //    @GET("reviews/product/{productId}/form-details")
