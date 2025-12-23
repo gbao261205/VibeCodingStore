@@ -65,12 +65,17 @@ public class CategoriesActivity extends AppCompatActivity implements View.OnClic
         navAccount = findViewById(R.id.nav_account);
 
         if (btnBack != null) {
-            btnBack.setOnClickListener(v -> finish());
+            btnBack.setOnClickListener(v -> {
+                Intent intent = new Intent(CategoriesActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            });
         }
 
         if (btnCart != null) {
             btnCart.setOnClickListener(v -> {
-                Toast.makeText(this, "Chức năng giỏ hàng", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(CategoriesActivity.this, CartActivity.class);
+                startActivity(intent);
             });
         }
     }

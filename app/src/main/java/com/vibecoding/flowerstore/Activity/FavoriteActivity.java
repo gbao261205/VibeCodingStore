@@ -72,7 +72,11 @@ public class FavoriteActivity extends AppCompatActivity implements View.OnClickL
         // Nút Back trên header
         ImageButton btnBack = findViewById(R.id.btn_back);
         if (btnBack != null) {
-            btnBack.setOnClickListener(v -> finish());
+            btnBack.setOnClickListener(v -> {
+                    Intent intent = new Intent(FavoriteActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+            });
         }
     }
 

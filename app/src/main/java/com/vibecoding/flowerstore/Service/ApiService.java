@@ -167,7 +167,7 @@ public interface ApiService {
 
     @PUT("addresses/{id}")
     Call<MessageResponse> updateAddress(@Path("id") int id, @Body AddressDTO request);
-//
+
     @DELETE("addresses/{id}")
     Call<MessageResponse> deleteAddress(@Path("id") int id);
 //
