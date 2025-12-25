@@ -36,7 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
     private TextView userName, userEmail;
     private Button logoutButton;
-    private MaterialButton orderHistoryButton, savedAddressesButton, paymentMethodsButton, helpSupportButton, cartButton;
+    private MaterialButton orderHistoryButton, savedAddressesButton, shopButton, helpSupportButton, cartButton;
     private LinearLayout userInfoLayout;
     private LinearLayout navHome, navCategories, navFavorites, navAccount;
     private ImageView avatar;
@@ -80,7 +80,7 @@ public class ProfileActivity extends AppCompatActivity {
         logoutButton = findViewById(R.id.logout_button);
         orderHistoryButton = findViewById(R.id.order_history_button);
         savedAddressesButton = findViewById(R.id.saved_addresses_button);
-        paymentMethodsButton = findViewById(R.id.payment_methods_button);
+        shopButton = findViewById(R.id.shop_button);
         helpSupportButton = findViewById(R.id.help_support_button);
         cartButton = findViewById(R.id.cart_button);
         userInfoLayout = findViewById(R.id.user_info_layout);
@@ -220,10 +220,33 @@ public class ProfileActivity extends AppCompatActivity {
 
         if(orderHistoryButton != null) orderHistoryButton.setVisibility(View.VISIBLE);
         if(savedAddressesButton != null) savedAddressesButton.setVisibility(View.VISIBLE);
-        if(paymentMethodsButton != null) paymentMethodsButton.setVisibility(View.VISIBLE);
         if(helpSupportButton != null) helpSupportButton.setVisibility(View.VISIBLE);
         if(cartButton != null) cartButton.setVisibility(View.VISIBLE);
         if(logoutButton != null) logoutButton.setVisibility(View.VISIBLE);
+
+        // Log user role for debugging
+        if (user.getRole() != null) {
+            Log.d(TAG, "User role from API: " + user.getRole().getName());
+        } else {
+            Log.d(TAG, "User role from API is null.");
+        }
+
+        if (shopButton != null) {
+            shopButton.setVisibility(View.VISIBLE);
+            if (user.getRole() != null && "vendor".equalsIgnoreCase(user.getRole().getName())) {
+                shopButton.setText("Quản lý shop");
+                shopButton.setOnClickListener(v -> {
+                    Intent intent = new Intent(ProfileActivity.this, ManageShopActivity.class);
+                    startActivity(intent);
+                });
+            } else {
+                shopButton.setText("Đăng ký mở shop");
+                shopButton.setOnClickListener(v -> {
+                    Intent intent = new Intent(ProfileActivity.this, RegisterShopActivity.class);
+                    startActivity(intent);
+                });
+            }
+        }
 
         userInfoLayout.setClickable(true);
         userInfoLayout.setOnClickListener(v -> {
@@ -249,7 +272,7 @@ public class ProfileActivity extends AppCompatActivity {
         // Ẩn các nút không cần thiết
         orderHistoryButton.setVisibility(View.GONE);
         savedAddressesButton.setVisibility(View.GONE);
-        paymentMethodsButton.setVisibility(View.GONE);
+        shopButton.setVisibility(View.GONE);
         helpSupportButton.setVisibility(View.GONE);
         logoutButton.setVisibility(View.GONE);
         cartButton.setVisibility(View.GONE);

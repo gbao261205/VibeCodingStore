@@ -28,6 +28,9 @@ public class User implements Serializable {
     @SerializedName("active")
     private boolean active;
 
+    @SerializedName("role")
+    private Role role;
+
     // --- Getters ---
 
     public int getId() {
@@ -57,5 +60,9 @@ public class User implements Serializable {
 
     public boolean isActive() {
         return active;
+    }
+
+    public Role getRole() {
+        return role;
     }
 }

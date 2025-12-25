@@ -128,12 +128,11 @@
                 android:visibility="gone"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/payment_methods_button"
+                android:id="@+id/shop_button"
                 style="@style/ProfileButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Phương thức thanh toán"
-                app:icon="@drawable/ic_credit_card"
+                android:text="Đăng ký mở shop"
                 android:visibility="gone"/>
 
             <com.google.android.material.button.MaterialButton
