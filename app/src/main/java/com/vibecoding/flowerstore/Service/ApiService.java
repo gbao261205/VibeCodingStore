@@ -7,6 +7,12 @@ import com.vibecoding.flowerstore.Model.Category;
 import com.vibecoding.flowerstore.Model.OrderDTO;
 import com.vibecoding.flowerstore.Model.ProductDTO;
 import com.vibecoding.flowerstore.Model.User;
+// Import các class Request/Response từ Service
+import com.vibecoding.flowerstore.Service.CheckoutDetailsResponse;
+import com.vibecoding.flowerstore.Service.PlaceOrderRequest;
+import com.vibecoding.flowerstore.Service.PlaceOrderResponse;
+// Import Shipper Response
+import com.vibecoding.flowerstore.Service.ShipperDashboardResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -142,19 +148,19 @@ public interface ApiService {
             @Query("productId") int productId
     );
 
-//    // ================== 4. ORDERS ==================
+    // ================== 4. ORDERS ==================
     @GET("orders/checkout-details")
     Call<CheckoutDetailsResponse> getCheckoutDetails(@Header("Authorization") String authToken);
 
     @POST("orders/place-order")
     Call<PlaceOrderResponse> placeOrder(@Header("Authorization") String authToken, @Body PlaceOrderRequest request);
-//
+
     @GET("orders/history")
     Call<List<OrderDTO>> getOrderHistory(
             @Header("Authorization") String authToken,
             @Query("status") String status
     );
-//
+
 //    // ================== 5. ADDRESSES ==================
     @GET("addresses")
     Call<List<AddressDTO>> getAddresses(@Header("Authorization") String authToken);
@@ -192,24 +198,24 @@ public interface ApiService {
 //    @GET("payment/vnpay-return")
 //    Call<PaymentReturnResponse> vnpayReturn(@QueryMap Map<String, String> vnpParams);
 //
-//    // ================== 9. SHIPPER ==================
-//    @GET("shipper/dashboard")
-//    Call<ShipperDashboardResponse> getShipperDashboard();
-//
-//    @GET("shipper/orders")
-//    Call<List<OrderDTO>> getShipperAssignedOrders();
-//
-//    @GET("shipper/available-orders")
-//    Call<List<OrderDTO>> getShipperAvailableOrders();
-//
-//    @POST("shipper/accept-order/{orderId}")
-//    Call<MessageResponse> acceptOrder(@Path("orderId") int orderId);
-//
-//    @POST("shipper/orders/{orderId}/update-status")
-//    Call<MessageResponse> updateOrderStatus(
-//            @Path("orderId") int orderId,
-//            @Query("status") String status
-//    );
+    // ================== 9. SHIPPER ==================
+    @GET("shipper/dashboard")
+    Call<ShipperDashboardResponse> getShipperDashboard();
+
+    @GET("shipper/orders")
+    Call<List<OrderDTO>> getShipperAssignedOrders();
+
+    @GET("shipper/available-orders")
+    Call<List<OrderDTO>> getShipperAvailableOrders();
+
+    @POST("shipper/accept-order/{orderId}")
+    Call<MessageResponse> acceptOrder(@Path("orderId") int orderId);
+
+    @POST("shipper/orders/{orderId}/update-status")
+    Call<MessageResponse> updateOrderStatus(
+            @Path("orderId") int orderId,
+            @Query("status") String status
+    );
 //
 //    // ================== 10. ADMIN ==================
 //    @GET("admin/dashboard")

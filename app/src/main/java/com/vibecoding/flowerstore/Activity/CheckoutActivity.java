@@ -1,15 +1,21 @@
 package com.vibecoding.flowerstore.Activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,6 +32,8 @@ import com.vibecoding.flowerstore.Service.ApiService;
 import com.vibecoding.flowerstore.Service.RetrofitClient;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,11 +48,15 @@ public class CheckoutActivity extends AppCompatActivity {
     private TextView tvShippingAddress, btnChangeAddress;
     private TextView tvSubtotal, tvShippingFee, tvTotalAmount;
     private Button btnPlaceOrder;
-    
+    private Spinner spinnerShipping, spinnerPaymentMethod;
+
     private String authToken;
     private AddressDTO selectedAddress;
     private CheckoutDetailsResponse.ShippingCarrier selectedCarrier;
     private CartDTO currentCart;
+    private List<AddressDTO> addressList = new ArrayList<>();
+    private List<CheckoutDetailsResponse.ShippingCarrier> carrierList = new ArrayList<>();
+    private String selectedPaymentMethod = "COD";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +65,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
         setupToolbar();
         initViews();
-        
+
         SharedPreferences prefs = getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE);
         String token = prefs.getString("ACCESS_TOKEN", null);
         if (token == null) {
@@ -77,6 +89,8 @@ public class CheckoutActivity extends AppCompatActivity {
         recyclerOrderSummary = findViewById(R.id.recycler_order_summary);
         tvShippingAddress = findViewById(R.id.tv_shipping_address);
         btnChangeAddress = findViewById(R.id.btn_change_address);
+        spinnerShipping = findViewById(R.id.spinner_shipping);
+        spinnerPaymentMethod = findViewById(R.id.spinner_payment_method);
         tvSubtotal = findViewById(R.id.tv_subtotal);
         tvShippingFee = findViewById(R.id.tv_shipping_fee);
         tvTotalAmount = findViewById(R.id.tv_total_amount);
@@ -108,22 +122,17 @@ public class CheckoutActivity extends AppCompatActivity {
 
     private void updateUI(CheckoutDetailsResponse data) {
         currentCart = data.getCart();
-        
-        // 1. Hiển thị danh sách sản phẩm
+
         if (currentCart != null && currentCart.getItems() != null) {
             checkoutAdapter = new CheckoutAdapter(currentCart.getItems(), this);
             recyclerOrderSummary.setAdapter(checkoutAdapter);
-            
-            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-            tvSubtotal.setText(currencyFormat.format(currentCart.getTotalAmount()));
+            tvSubtotal.setText(formatCurrency(currentCart.getTotalAmount()));
         }
 
-        // 2. Xử lý địa chỉ
-        List<AddressDTO> addresses = data.getAddresses();
-        if (addresses != null && !addresses.isEmpty()) {
-            selectedAddress = addresses.get(0); 
-            // Ưu tiên địa chỉ mặc định
-            for (AddressDTO addr : addresses) {
+        addressList = data.getAddresses();
+        if (addressList != null && !addressList.isEmpty()) {
+            selectedAddress = addressList.get(0);
+            for (AddressDTO addr : addressList) {
                 if (addr.isDefault()) {
                     selectedAddress = addr;
                     break;
@@ -135,18 +144,30 @@ public class CheckoutActivity extends AppCompatActivity {
             selectedAddress = null;
         }
 
-        // 3. Xử lý vận chuyển
-        List<CheckoutDetailsResponse.ShippingCarrier> carriers = data.getShippingCarriers();
-        if (carriers != null && !carriers.isEmpty()) {
-            selectedCarrier = carriers.get(0);
-            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-            tvShippingFee.setText(currencyFormat.format(selectedCarrier.getShippingFee()));
-        } else {
-            tvShippingFee.setText("0đ");
+        carrierList = data.getShippingCarriers();
+        if (carrierList != null && !carrierList.isEmpty()) {
+            setupShippingSpinner(carrierList);
         }
 
-        // 4. Tính tổng tiền
+        setupPaymentSpinner();
         calculateTotal();
+    }
+
+    private void setupShippingSpinner(List<CheckoutDetailsResponse.ShippingCarrier> carriers) {
+        List<String> carrierNames = new ArrayList<>();
+        for (CheckoutDetailsResponse.ShippingCarrier carrier : carriers) {
+            carrierNames.add(carrier.getName() + " - " + formatCurrency(carrier.getShippingFee()));
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, carrierNames);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerShipping.setAdapter(adapter);
+    }
+
+    private void setupPaymentSpinner() {
+        List<String> paymentMethods = Arrays.asList("Thanh toán khi nhận hàng (COD)", "Thanh toán Online (PAY)");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, paymentMethods);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerPaymentMethod.setAdapter(adapter);
     }
 
     private void displayAddress(AddressDTO address) {
@@ -158,21 +179,58 @@ public class CheckoutActivity extends AppCompatActivity {
 
     private void calculateTotal() {
         if (currentCart == null) return;
-        
+
         double subtotal = currentCart.getTotalAmount();
         double shippingFee = (selectedCarrier != null) ? selectedCarrier.getShippingFee() : 0;
         double total = subtotal + shippingFee;
 
-        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-        tvTotalAmount.setText(currencyFormat.format(total));
+        tvShippingFee.setText(formatCurrency(shippingFee));
+        tvTotalAmount.setText(formatCurrency(total));
     }
 
     private void setupEvents() {
-        btnChangeAddress.setOnClickListener(v -> {
-            Toast.makeText(this, "Tính năng chọn địa chỉ đang phát triển", Toast.LENGTH_SHORT).show();
+        btnChangeAddress.setOnClickListener(v -> showAddressSelectionDialog());
+
+        spinnerShipping.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedCarrier = carrierList.get(position);
+                calculateTotal();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+
+        spinnerPaymentMethod.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedPaymentMethod = (position == 0) ? "COD" : "PAY";
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
         });
 
         btnPlaceOrder.setOnClickListener(v -> placeOrder());
+    }
+
+    private void showAddressSelectionDialog() {
+        if (addressList == null || addressList.isEmpty()) {
+            Toast.makeText(this, "Không có địa chỉ nào để chọn", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        List<String> addressStrings = new ArrayList<>();
+        for (AddressDTO address : addressList) {
+            addressStrings.add(address.getRecipientName() + " - " + address.getDetailAddress());
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle("Chọn địa chỉ giao hàng")
+                .setItems(addressStrings.toArray(new String[0]), (dialog, which) -> {
+                    selectedAddress = addressList.get(which);
+                    displayAddress(selectedAddress);
+                })
+                .show();
     }
 
     private void placeOrder() {
@@ -181,14 +239,14 @@ public class CheckoutActivity extends AppCompatActivity {
             return;
         }
         if (selectedCarrier == null) {
-            Toast.makeText(this, "Lỗi: Không có đơn vị vận chuyển", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Vui lòng chọn đơn vị vận chuyển", Toast.LENGTH_SHORT).show();
             return;
         }
 
         PlaceOrderRequest request = new PlaceOrderRequest(
                 selectedAddress.getId(),
                 selectedCarrier.getId(),
-                "COD",
+                selectedPaymentMethod,
                 currentCart.getTotalAmount()
         );
 
@@ -200,7 +258,7 @@ public class CheckoutActivity extends AppCompatActivity {
             public void onResponse(Call<PlaceOrderResponse> call, Response<PlaceOrderResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(CheckoutActivity.this, "Đặt hàng thành công!", Toast.LENGTH_LONG).show();
-                    
+
                     Intent intent = new Intent(CheckoutActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
@@ -224,5 +282,9 @@ public class CheckoutActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private String formatCurrency(double amount) {
+        return NumberFormat.getCurrencyInstance(new Locale("vi", "VN")).format(amount);
     }
 }

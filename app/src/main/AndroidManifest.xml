@@ -30,7 +30,11 @@
             android:exported="false" />
         <activity
             android:name=".Activity.EditProfileActivity"
-            android:exported="false" /> <!-- 1. Đặt IntroActivity làm màn hình khởi chạy -->
+            android:exported="false" />
+        <activity
+            android:name=".Activity.CheckoutActivity"
+            android:exported="false" />
+        <!-- 1. Đặt IntroActivity làm màn hình khởi chạy -->
         <activity
             android:name=".Activity.IntroActivity"
             android:exported="true">
