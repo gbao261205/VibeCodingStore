@@ -128,20 +128,21 @@
                 android:visibility="gone"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/shop_button"
-                style="@style/ProfileButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Đăng ký mở shop"
-                android:visibility="gone"/>
-
-            <com.google.android.material.button.MaterialButton
                 android:id="@+id/cart_button"
                 style="@style/ProfileButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Giỏ hàng"
                 app:icon="@drawable/ic_shopping_cart"
+                android:visibility="gone"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/shop_button"
+                style="@style/ProfileButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Đăng ký mở shop"
+                app:icon="@drawable/ic_register_shop_role"
                 android:visibility="gone"/>
 
             <com.google.android.material.button.MaterialButton
