@@ -1,12 +1,11 @@
 package com.vibecoding.flowerstore.Adapter;
 
 import android.content.Context;
-import android.content.Intent; // Import Intent
-import android.util.Log;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.ImageButton; // Nút tim vẫn còn
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.vibecoding.flowerstore.Activity.ProductDetailActivity; // Import trang chi tiết
+import com.vibecoding.flowerstore.Activity.ProductDetailActivity;
 import com.vibecoding.flowerstore.Model.DataStore;
 import com.vibecoding.flowerstore.Model.Product;
 import com.vibecoding.flowerstore.R;
@@ -70,13 +69,15 @@ public class FavoriteProductAdapter extends RecyclerView.Adapter<FavoriteProduct
             holder.imgProduct.setImageResource(R.drawable.banner1);
         }
 
-        // 2. Sự kiện thêm vào giỏ hàng
-        holder.btnAddCart.setOnClickListener(v -> {
-            Toast.makeText(context, "Đã thêm vào giỏ", Toast.LENGTH_SHORT).show();
-            // TODO: Gọi API thêm vào giỏ nếu cần
+        // --- 2. SỰ KIỆN CLICK VÀO SẢN PHẨM -> MỞ CHI TIẾT ---
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ProductDetailActivity.class);
+            intent.putExtra("product_id", product.getId());
+            context.startActivity(intent);
         });
 
-        // 3. Sự kiện Xóa yêu thích (Optimistic UI)
+        // --- 3. SỰ KIỆN NÚT TIM (XÓA KHỎI YÊU THÍCH) ---
+        // Vẫn giữ nguyên logic xóa nhanh
         holder.btnFavorite.setOnClickListener(v -> {
             int currentPos = holder.getAdapterPosition();
             if (currentPos != RecyclerView.NO_POSITION) {
@@ -84,16 +85,10 @@ public class FavoriteProductAdapter extends RecyclerView.Adapter<FavoriteProduct
             }
         });
 
-        // --- 4. SỰ KIỆN CLICK VÀO SẢN PHẨM -> MỞ CHI TIẾT (MỚI THÊM) ---
-        holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, ProductDetailActivity.class);
-            // Truyền ID để bên kia gọi API hoặc tìm trong cache
-            intent.putExtra("product_id", product.getId());
-            context.startActivity(intent);
-        });
+        // ❌ ĐÃ XÓA CODE LIÊN QUAN ĐẾN btnAddCart TẠI ĐÂY
     }
 
-    // Hàm xóa nhanh (như cũ)
+    // Hàm xóa nhanh (Giữ nguyên không đổi)
     private void deleteItemOptimistic(int position, int productId) {
         Product removedProduct = productList.get(position);
 
@@ -116,13 +111,12 @@ public class FavoriteProductAdapter extends RecyclerView.Adapter<FavoriteProduct
             }
         }
 
-        // Gọi API ngầm
+        // Gọi API
         ApiService apiService = RetrofitClient.getClient(context).create(ApiService.class);
         apiService.removeFromWishlist(productId).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (!response.isSuccessful()) {
-                    // Lỗi -> Hoàn tác
                     Toast.makeText(context, "Lỗi server, khôi phục lại!", Toast.LENGTH_SHORT).show();
                     productList.add(position, removedProduct);
                     notifyItemInserted(position);
@@ -132,7 +126,6 @@ public class FavoriteProductAdapter extends RecyclerView.Adapter<FavoriteProduct
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Lỗi mạng -> Hoàn tác
                 Toast.makeText(context, "Lỗi mạng!", Toast.LENGTH_SHORT).show();
                 productList.add(position, removedProduct);
                 notifyItemInserted(position);
@@ -149,15 +142,17 @@ public class FavoriteProductAdapter extends RecyclerView.Adapter<FavoriteProduct
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imgProduct;
         TextView tvName, tvPrice;
-        ImageButton btnFavorite, btnAddCart;
+        ImageButton btnFavorite;
+        // ❌ Đã xóa: ImageButton btnAddCart;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imgProduct = itemView.findViewById(R.id.img_product);
             tvName = itemView.findViewById(R.id.tv_product_name);
             tvPrice = itemView.findViewById(R.id.tv_product_price);
-            btnFavorite = itemView.findViewById(R.id.btn_favorite);
-            btnAddCart = itemView.findViewById(R.id.btn_add_to_cart);
+            btnFavorite = itemView.findViewById(R.id.btn_favorite); // Đảm bảo ID này khớp với XML mới
+
+            // ❌ Đã xóa dòng ánh xạ btnAddCart
         }
     }
 }
