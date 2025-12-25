@@ -33,4 +33,14 @@ public class CartItem {
     public double getSubtotal() {
         return subtotal;
     }
+
+    // --- Setters ---
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setSubtotal(double subtotal) {
+        this.subtotal = subtotal;
+    }
 }
