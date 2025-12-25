@@ -244,7 +244,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         cartButton.setOnClickListener(this);
     }
 
-    // --- XỬ LÝ SỰ KIỆN CLICK VÀ CHỐNG NHẤP NHÁY (BLINKING) ---
     @Override
     public void onClick(View v) {
         int id = v.getId();

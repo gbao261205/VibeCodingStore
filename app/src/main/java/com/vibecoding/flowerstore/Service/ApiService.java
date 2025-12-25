@@ -45,8 +45,15 @@ public interface ApiService {
     @GET("categories")
     Call<List<Category>> getCategories();
     @GET("products")
-    Call<ApiResponse> getWishlistedProducts(@Query("sort") String sortParam);
-
+    Call<ApiResponse> getWishlistedProducts(
+            @Query("sort") String sort,  // Truyền "wishlisted" vào đây
+            @Query("page") int page,     // Mặc định 0
+            @Query("size") int size      // Mặc định 20
+    );
+    @POST("/wishlist/remove/{id}")
+    Call<ResponseBody> removeFromWishlist(@Path("id") int id);
+    @POST("/wishlist/add/{id}")
+    Call<ResponseBody> addToWishlist(@Path("id") int id);
     @GET("products/category/{categorySlug}")
     Call<ApiResponse> getProductsByCategory(@Path("categorySlug") String slug);
 
