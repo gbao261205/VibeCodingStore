@@ -146,6 +146,15 @@
                 android:visibility="gone"/>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAdmin"
+                style="@style/ProfileButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Trang quản trị"
+                app:icon="@drawable/ic_register_shop_role"
+                android:visibility="gone"/>
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/help_support_button"
                 style="@style/ProfileButtonStyle"
                 android:layout_width="match_parent"
