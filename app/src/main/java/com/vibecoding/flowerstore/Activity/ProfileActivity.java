@@ -21,7 +21,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
-import com.vibecoding.flowerstore.Model.DataStore;
 import com.vibecoding.flowerstore.Model.User;
 import com.vibecoding.flowerstore.R;
 import com.vibecoding.flowerstore.Service.ApiService;
@@ -251,7 +250,7 @@ public class ProfileActivity extends AppCompatActivity {
         if (btnAdmin != null && user.getRole() != null && "admin".equalsIgnoreCase(user.getRole().getName())) {
             btnAdmin.setVisibility(View.VISIBLE);
             btnAdmin.setOnClickListener(v -> {
-                Intent intent = new Intent(ProfileActivity.this, AdminActivity.class);
+                Intent intent = new Intent(ProfileActivity.this, AdminDashboardActivity.class);
                 startActivity(intent);
             });
         }

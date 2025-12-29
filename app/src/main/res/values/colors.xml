@@ -34,4 +34,16 @@
     <color name="profile_input_readonly">#F3F4F6</color>
     <color name="profile_border">#E5E7EB</color>
     <color name="profile_red">#EF4444</color>
+
+    <color name="primary_pink_light">#FFF0F5</color>
+    <color name="text_title">#181114</color>
+    <color name="text_body">#6B7280</color>
+    <color name="success_green">#166534</color>
+    <color name="success_bg">#DCFCE7</color>
+    <color name="warning_yellow">#B45309</color>
+    <color name="warning_bg">#FEF3C7</color>
+    <color name="error_red">#991B1B</color>
+    <color name="error_bg">#FEE2E2</color>
+    <color name="blue_icon">#2563EB</color>
+    <color name="blue_bg">#DBEAFE</color>
 </resources>

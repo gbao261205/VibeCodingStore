@@ -20,7 +20,7 @@
             android:name=".Activity.SupportActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.AdminActivity"
+            android:name=".Activity.AdminDashboardActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.HelpSupportActivity"
