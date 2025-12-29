@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="@color/background_light">
 
     <LinearLayout
@@ -34,7 +33,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Quản lý cửa hàng"
+            android:text="Quản lý đơn hàng"
             android:textSize="18sp"
             android:textColor="@color/text_dark"
             android:textStyle="bold"
@@ -59,17 +58,17 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/searchContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="12dp"
-                android:background="@color/background_light">
+                android:background="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:background="@drawable/bg_search_input"
+                    android:backgroundTint="@color/background_light"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="12dp">
 
@@ -77,78 +76,116 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_search"
-                        app:tint="@color/text_hint"/>
+                        app:tint="@color/text_sub"/>
 
                     <EditText
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:background="@null"
-                        android:hint="Tìm kiếm cửa hàng..."
-                        android:textColorHint="@color/text_hint"
+                        android:hint="Tìm kiếm mã đơn, tên khách hàng..."
+                        android:textColorHint="@color/text_sub"
                         android:textColor="@color/text_title"
-                        android:textSize="15sp"
-                        android:paddingStart="12dp"
+                        android:textSize="14sp"
+                        android:paddingHorizontal="8dp"
                         android:inputType="text"/>
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_filter"
+                        app:tint="@color/primary_pink"/>
                 </LinearLayout>
             </LinearLayout>
 
             <HorizontalScrollView
-                android:id="@+id/filterScroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="none"
-                android:clipToPadding="false"
-                android:paddingBottom="8dp">
+                android:paddingVertical="8dp"
+                android:clipToPadding="false">
 
-                <LinearLayout
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupFilter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="16dp">
+                    android:paddingHorizontal="16dp"
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+                    app:singleLine="true"
+                    android:layout_gravity="center_vertical">
 
-                    <TextView
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipAll"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="wrap_content"
-                        android:layout_height="36dp"
+                        android:layout_height="wrap_content"
                         android:text="Tất cả"
-                        android:gravity="center"
-                        android:paddingHorizontal="20dp"
-                        android:background="@drawable/bg_chip_selected_pink"
-                        android:textColor="@color/white"
-                        android:textStyle="bold"
-                        android:layout_marginEnd="8dp"/>
+                        android:checked="true"/>
 
-                    <TextView
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipNew"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="wrap_content"
-                        android:layout_height="36dp"
-                        android:text="Đang hoạt động"
-                        android:gravity="center"
-                        android:paddingHorizontal="20dp"
-                        android:background="@drawable/bg_chip_unselected"
-                        android:textColor="@color/text_hint"
-                        android:textStyle="bold"
-                        android:layout_marginEnd="8dp"/>
+                        android:layout_height="wrap_content"
+                        android:text="Đơn hàng mới" />
 
-                    <TextView
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipWaitConfirm"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="wrap_content"
-                        android:layout_height="36dp"
-                        android:text="Đóng cửa"
-                        android:gravity="center"
-                        android:paddingHorizontal="20dp"
-                        android:background="@drawable/bg_chip_unselected"
-                        android:textColor="@color/text_hint"
-                        android:textStyle="bold"/>
-                </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:text="Chờ xác nhận" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipWaitPickup"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Chờ lấy hàng" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipDelivering"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Đang giao" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipSuccess"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Giao thành công" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFail"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Giao thất bại" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipCancelled"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Đã hủy" />
+
+                </com.google.android.material.chip.ChipGroup>
             </HorizontalScrollView>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvStoreList"
+                android:id="@+id/rvOrderList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
-                android:paddingTop="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
                 android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_store_admin" />
+                tools:listitem="@layout/item_order_admin" />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -167,8 +204,8 @@
         </LinearLayout>
 
         <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
-            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_receipt" app:tint="@color/text_hint"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="@color/text_hint" android:text="Đơn hàng"/>
+            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_receipt" app:tint="@color/primary_pink"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="@color/primary_pink" android:text="Đơn hàng"/>
         </LinearLayout>
 
         <FrameLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:clipChildren="false">
@@ -190,8 +227,8 @@
         </LinearLayout>
 
         <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
-            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_shopping_bag" app:tint="@color/primary_pink"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Cửa hàng" android:textSize="10sp" android:textColor="@color/primary_pink"/>
+            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_shopping_bag" app:tint="@color/text_hint"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Cửa hàng" android:textSize="10sp" android:textColor="@color/text_hint"/>
         </LinearLayout>
     </LinearLayout>
 
