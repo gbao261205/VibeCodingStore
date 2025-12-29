@@ -36,7 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
     private TextView userName, userEmail;
     private Button logoutButton;
-    private MaterialButton orderHistoryButton, savedAddressesButton, shopButton, helpSupportButton, cartButton;
+    private MaterialButton orderHistoryButton, savedAddressesButton, shopButton, helpSupportButton, cartButton, btnAdmin;
     private LinearLayout userInfoLayout;
     private LinearLayout navHome, navCategories, navFavorites, navAccount;
     private ImageView avatar;
@@ -83,6 +83,7 @@ public class ProfileActivity extends AppCompatActivity {
         shopButton = findViewById(R.id.shop_button);
         helpSupportButton = findViewById(R.id.help_support_button);
         cartButton = findViewById(R.id.cart_button);
+        btnAdmin = findViewById(R.id.btnAdmin);
         userInfoLayout = findViewById(R.id.user_info_layout);
         avatar = findViewById(R.id.avatar);
         progressBar = findViewById(R.id.profile_progress_bar);
@@ -109,7 +110,6 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    // --- ĐÂY LÀ PHẦN SỬA ĐỔI NAVIGATION ---
     private void setupNavigation() {
         // 1. Về Trang Chủ: Cần finish() để xóa các trang cũ, tránh nặng máy
         navHome.setOnClickListener(v -> {
@@ -239,7 +239,7 @@ public class ProfileActivity extends AppCompatActivity {
                     Intent intent = new Intent(ProfileActivity.this, ManageShopActivity.class);
                     startActivity(intent);
                 });
-            } else {
+            } else if (user.getRole() != null && "user".equalsIgnoreCase(user.getRole().getName())) {
                 shopButton.setText("Đăng ký mở shop");
                 shopButton.setOnClickListener(v -> {
                     Intent intent = new Intent(ProfileActivity.this, RegisterShopActivity.class);
@@ -248,10 +248,23 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }
 
+        if (btnAdmin != null && user.getRole() != null && "admin".equalsIgnoreCase(user.getRole().getName())) {
+            btnAdmin.setVisibility(View.VISIBLE);
+            btnAdmin.setOnClickListener(v -> {
+                Intent intent = new Intent(ProfileActivity.this, AdminActivity.class);
+                startActivity(intent);
+            });
+        }
+
         userInfoLayout.setClickable(true);
         userInfoLayout.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
             intent.putExtra("user", cachedUser);
+            startActivity(intent);
+        });
+
+        helpSupportButton.setOnClickListener(v->{
+            Intent intent = new Intent(ProfileActivity.this, SupportActivity.class);
             startActivity(intent);
         });
 

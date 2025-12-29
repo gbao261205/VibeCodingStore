@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/background_light"
+    tools:context=".Activity.SupportActivity">
+
+    <!-- App Bar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_light"
+        app:elevation="0dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="Trợ giúp &amp; Hỗ trợ"
+            app:titleTextColor="@color/text_primary"
+            app:navigationIcon="@drawable/ic_back"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/appbar"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Sản phẩm & Đặt hàng -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sản phẩm &amp; Đặt hàng"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/primary"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Item 1 -->
+            <LinearLayout
+                android:id="@+id/layout_q1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_profile_input"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/tv_question1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Hình ảnh trên app có giống hoa thực tế không?"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:drawableEnd="@drawable/ic_chevron_right"
+                    android:drawablePadding="8dp"/>
+
+                <TextView
+                    android:id="@+id/tv_answer1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Cam kết giống mẫu từ 80-90%. Do hoa là sản phẩm mùa vụ và thủ công, sẽ có chút chênh lệch về màu sắc hoặc hoa phụ. Shop sẽ báo trước nếu thay đổi loại hoa chính."
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <!-- Item 2 -->
+            <LinearLayout
+                android:id="@+id/layout_q2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_profile_input"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/tv_question2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tôi có thể đặt hoa thiết kế theo yêu cầu riêng không?"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:drawableEnd="@drawable/ic_chevron_right"
+                    android:drawablePadding="8dp"/>
+
+                <TextView
+                    android:id="@+id/tv_answer2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Có. Bạn hãy dùng tính năng “Chat với Shop” để gửi mẫu hoặc mô tả ý tưởng. Shop sẽ báo giá và tạo đơn riêng cho bạn."
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <!-- Item 3 -->
+            <LinearLayout
+                android:id="@+id/layout_q3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_profile_input"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/tv_question3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tôi muốn tặng quà ẩn danh (giấu tên người gửi) được không?"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:drawableEnd="@drawable/ic_chevron_right"
+                    android:drawablePadding="8dp"/>
+
+                <TextView
+                    android:id="@+id/tv_answer3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Được. Khi thanh toán, hãy chọn mục “Người gửi ẩn danh”. Thông tin của bạn sẽ được bảo mật tuyệt đối, không hiện trên thiệp hay phiếu giao hàng."
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <!-- Item 4 -->
+            <LinearLayout
+                android:id="@+id/layout_q4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_profile_input"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/tv_question4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tôi nên đặt lịch giao hoa trước bao lâu?"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:drawableEnd="@drawable/ic_chevron_right"
+                    android:drawablePadding="8dp"/>
+
+                <TextView
+                    android:id="@+id/tv_answer4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Bạn có thể đặt giao ngay (hỏa tốc) hoặc đặt trước nhiều ngày. Tốt nhất nên đặt trước 24h để Shop chuẩn bị hoa tươi mới nhất."
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <!-- Vận chuyển -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vận chuyển"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/primary"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Item 5 -->
+            <LinearLayout
+                android:id="@+id/layout_q5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_profile_input"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/tv_question5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Phí vận chuyển được tính như thế nào?"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:drawableEnd="@drawable/ic_chevron_right"
+                    android:drawablePadding="8dp"/>
+
+                <TextView
+                    android:id="@+id/tv_answer5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Phí ship tính theo khoảng cách thực tế từ Shop đến địa chỉ người nhận. Giá ship sẽ hiển thị rõ ràng trước khi bạn thanh toán."
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <!-- Item 6 -->
+            <LinearLayout
+                android:id="@+id/layout_q6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_profile_input"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/tv_question6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Thời gian giao hàng mất bao lâu?"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:drawableEnd="@drawable/ic_chevron_right"
+                    android:drawablePadding="8dp"/>
+
+                <TextView
+                    android:id="@+id/tv_answer6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Giao hỏa tốc: 1-2 giờ (tùy khoảng cách).\n\nGiao hẹn giờ: Giao đúng khung giờ bạn chọn trên đơn hàng."
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <!-- Item 7 -->
+            <LinearLayout
+                android:id="@+id/layout_q7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_profile_input"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/tv_question7"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Làm sao biết hoa không bị dập nát khi giao?"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:drawableEnd="@drawable/ic_chevron_right"
+                    android:drawablePadding="8dp"/>
+
+                <TextView
+                    android:id="@+id/tv_answer7"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Các đơn vị vận chuyển đều được đào tạo chuyên biệt về bảo quản hoa tươi. Nếu hoa hỏng do vận chuyển, bạn được đền bù 100%."
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <!-- Item 8 -->
+            <LinearLayout
+                android:id="@+id/layout_q8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_profile_input"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/tv_question8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tôi có thể theo dõi vị trí đơn hàng không?"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:drawableEnd="@drawable/ic_chevron_right"
+                    android:drawablePadding="8dp"/>
+
+                <TextView
+                    android:id="@+id/tv_answer8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Có. Bạn xem được trạng thái (Đang cắm, Đang giao, Đã giao) trực tiếp trên ứng dụng theo thời gian thực."
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+
+            <!-- Thanh toán -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thanh toán"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/primary"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Item 9 -->
+            <LinearLayout
+                android:id="@+id/layout_q9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_profile_input"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/tv_question9"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="App hỗ trợ những phương thức thanh toán nào?"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:drawableEnd="@drawable/ic_chevron_right"
+                    android:drawablePadding="8dp"/>
+
+                <TextView
+                    android:id="@+id/tv_answer9"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Đa dạng hình thức: Ví điện tử (Momo, ZaloPay...), Thẻ Visa/Master/ATM, Chuyển khoản và COD (tùy shop)."
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <!-- Item 10 -->
+            <LinearLayout
+                android:id="@+id/layout_q10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_profile_input"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/tv_question10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Chính sách “Bảo vệ người mua” là gì?"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:drawableEnd="@drawable/ic_chevron_right"
+                    android:drawablePadding="8dp"/>
+
+                <TextView
+                    android:id="@+id/tv_answer10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Số tiền bạn trả sẽ được App tạm giữ. Shop chỉ nhận được tiền khi bạn xác nhận đã nhận hoa và hài lòng (hoặc sau 24h không có khiếu nại)."
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <!-- Đổi trả & Khiếu nại -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đổi trả &amp; Khiếu nại"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/primary"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Item 11 -->
+            <LinearLayout
+                android:id="@+id/layout_q11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_profile_input"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/tv_question11"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tôi phải làm gì nếu hoa bị héo, dập hoặc sai mẫu?"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:drawableEnd="@drawable/ic_chevron_right"
+                    android:drawablePadding="8dp"/>
+
+                <TextView
+                    android:id="@+id/tv_answer11"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Hãy chụp ảnh/quay video và gửi khiếu nại trên App trong vòng 60 phút kể từ khi nhận hoa. Chúng tôi sẽ xử lý hoàn tiền hoặc giao lại ngay."
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <!-- Item 12 -->
+            <LinearLayout
+                android:id="@+id/layout_q12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_profile_input"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/tv_question12"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tôi có thể hủy đơn hàng không?"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:drawableEnd="@drawable/ic_chevron_right"
+                    android:drawablePadding="8dp"/>
+
+                <TextView
+                    android:id="@+id/tv_answer12"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Được: Nếu Shop chưa xác nhận đơn.\n\nKhông được: Nếu Shop đã xác nhận/đang cắm (do hoa là hàng tươi sống đã cắt cành)."
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <!-- Item 13 -->
+            <LinearLayout
+                android:id="@+id/layout_q13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_profile_input"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/tv_question13"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Bao lâu thì tôi nhận được tiền hoàn?"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:drawableEnd="@drawable/ic_chevron_right"
+                    android:drawablePadding="8dp"/>
+
+                <TextView
+                    android:id="@+id/tv_answer13"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Từ 3-5 ngày làm việc, tiền sẽ về tài khoản của bạn nếu khiếu nại hợp lệ."
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+
+            <!-- Shop & Tương tác -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shop &amp; Tương tác"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/primary"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Item 14 -->
+            <LinearLayout
+                android:id="@+id/layout_q14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_profile_input"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/tv_question14"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Làm sao để chọn được Shop uy tín?"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:drawableEnd="@drawable/ic_chevron_right"
+                    android:drawablePadding="8dp"/>
+
+                <TextView
+                    android:id="@+id/tv_answer14"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Hãy xem huy hiệu “Shop Yêu Thích” và đọc phần đánh giá/bình luận kèm hình ảnh thật từ các người mua trước đó."
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <!-- Item 15 -->
+            <LinearLayout
+                android:id="@+id/layout_q15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_profile_input"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/tv_question15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Shop không trả lời tin nhắn, tôi phải làm sao?"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:drawableEnd="@drawable/ic_chevron_right"
+                    android:drawablePadding="8dp"/>
+
+                <TextView
+                    android:id="@+id/tv_answer15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Nếu quá 2 giờ không thấy phản hồi, bạn hãy gọi tổng đài hỗ trợ của App để chúng tôi liên hệ Shop giúp bạn."
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
