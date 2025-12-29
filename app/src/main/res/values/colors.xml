@@ -69,4 +69,11 @@
     <color name="icon_green_bg">#DCFCE7</color>
     <color name="icon_purple_bg">#F3E8FF</color>
     <color name="icon_gray_bg">#F3F4F6</color>
+    <color name="status_instock_text">#15803D</color>
+    <color name="status_instock_bg">#F0FDF4</color>
+    <color name="status_outstock_text">#991B1B</color>
+    <color name="status_outstock_bg">#FEF2F2</color>
+    <color name="status_lowstock_text">#854D0E</color>
+    <color name="status_lowstock_bg">#FEFCE8</color>
+    <color name="price_text">#ef3985</color>
 </resources>
