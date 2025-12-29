@@ -92,6 +92,9 @@
         <activity
             android:name=".Activity.ManageShopActivity"
             android:exported="false" />
+        <activity
+            android:name=".Activity.OrderSuccessActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

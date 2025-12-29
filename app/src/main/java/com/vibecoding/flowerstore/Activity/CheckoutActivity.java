@@ -1,16 +1,16 @@
 package com.vibecoding.flowerstore.Activity;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +33,6 @@ import com.vibecoding.flowerstore.Service.RetrofitClient;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -48,15 +47,34 @@ public class CheckoutActivity extends AppCompatActivity {
     private TextView tvShippingAddress, btnChangeAddress;
     private TextView tvSubtotal, tvShippingFee, tvTotalAmount;
     private Button btnPlaceOrder;
-    private Spinner spinnerShipping, spinnerPaymentMethod;
+    
+    // Shipping UI
+    private LinearLayout layoutShippingHeader, layoutShippingOptions;
+    private TextView tvSelectedShippingMethod;
+    private ImageView imgShippingArrow;
+    private RadioGroup radioGroupShipping;
+    private RadioButton rbStandard, rbFast, rbExpress;
+
+    // Payment UI
+    private LinearLayout layoutPaymentHeader, layoutPaymentOptions;
+    private TextView tvSelectedPaymentMethod;
+    private ImageView imgPaymentArrow;
+    private RadioGroup radioGroupPayment;
+    private RadioButton rbCod, rbVnpay;
 
     private String authToken;
     private AddressDTO selectedAddress;
-    private CheckoutDetailsResponse.ShippingCarrier selectedCarrier;
+    private int selectedCarrierId = 1; // Default Standard
+    private double currentShippingFee = 30000;
     private CartDTO currentCart;
     private List<AddressDTO> addressList = new ArrayList<>();
-    private List<CheckoutDetailsResponse.ShippingCarrier> carrierList = new ArrayList<>();
+    
     private String selectedPaymentMethod = "COD";
+    
+    // State variables
+    private boolean isShippingExpanded = false;
+    private boolean isPaymentExpanded = false;
+    private boolean isOrderProcessing = false; // Prevent double click
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,12 +107,30 @@ public class CheckoutActivity extends AppCompatActivity {
         recyclerOrderSummary = findViewById(R.id.recycler_order_summary);
         tvShippingAddress = findViewById(R.id.tv_shipping_address);
         btnChangeAddress = findViewById(R.id.btn_change_address);
-        spinnerShipping = findViewById(R.id.spinner_shipping);
-        spinnerPaymentMethod = findViewById(R.id.spinner_payment_method);
+        
         tvSubtotal = findViewById(R.id.tv_subtotal);
         tvShippingFee = findViewById(R.id.tv_shipping_fee);
         tvTotalAmount = findViewById(R.id.tv_total_amount);
         btnPlaceOrder = findViewById(R.id.btn_place_order);
+        
+        // Shipping UI
+        layoutShippingHeader = findViewById(R.id.layout_shipping_header);
+        layoutShippingOptions = findViewById(R.id.layout_shipping_options);
+        tvSelectedShippingMethod = findViewById(R.id.tv_selected_shipping_method);
+        imgShippingArrow = findViewById(R.id.img_shipping_arrow);
+        radioGroupShipping = findViewById(R.id.radio_group_shipping);
+        rbStandard = findViewById(R.id.rb_standard);
+        rbFast = findViewById(R.id.rb_fast);
+        rbExpress = findViewById(R.id.rb_express);
+        
+        // Payment UI
+        layoutPaymentHeader = findViewById(R.id.layout_payment_header);
+        layoutPaymentOptions = findViewById(R.id.layout_payment_options);
+        tvSelectedPaymentMethod = findViewById(R.id.tv_selected_payment_method);
+        imgPaymentArrow = findViewById(R.id.img_payment_arrow);
+        radioGroupPayment = findViewById(R.id.radio_group_payment);
+        rbCod = findViewById(R.id.rb_cod);
+        rbVnpay = findViewById(R.id.rb_vnpay);
 
         recyclerOrderSummary.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -143,31 +179,16 @@ public class CheckoutActivity extends AppCompatActivity {
             tvShippingAddress.setText("Vui lòng thêm địa chỉ giao hàng");
             selectedAddress = null;
         }
+        
+        // Mặc định chọn Standard
+        rbStandard.setChecked(true);
+        updateShippingSelection(1, 30000, "Tiêu chuẩn - 30.000đ");
 
-        carrierList = data.getShippingCarriers();
-        if (carrierList != null && !carrierList.isEmpty()) {
-            setupShippingSpinner(carrierList);
-        }
-
-        setupPaymentSpinner();
+        // Mặc định thanh toán COD
+        rbCod.setChecked(true);
+        updatePaymentSelection("COD", "Thanh toán khi nhận hàng (COD)");
+        
         calculateTotal();
-    }
-
-    private void setupShippingSpinner(List<CheckoutDetailsResponse.ShippingCarrier> carriers) {
-        List<String> carrierNames = new ArrayList<>();
-        for (CheckoutDetailsResponse.ShippingCarrier carrier : carriers) {
-            carrierNames.add(carrier.getName() + " - " + formatCurrency(carrier.getShippingFee()));
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, carrierNames);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerShipping.setAdapter(adapter);
-    }
-
-    private void setupPaymentSpinner() {
-        List<String> paymentMethods = Arrays.asList("Thanh toán khi nhận hàng (COD)", "Thanh toán Online (PAY)");
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, paymentMethods);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerPaymentMethod.setAdapter(adapter);
     }
 
     private void displayAddress(AddressDTO address) {
@@ -181,33 +202,73 @@ public class CheckoutActivity extends AppCompatActivity {
         if (currentCart == null) return;
 
         double subtotal = currentCart.getTotalAmount();
-        double shippingFee = (selectedCarrier != null) ? selectedCarrier.getShippingFee() : 0;
-        double total = subtotal + shippingFee;
+        double total = subtotal + currentShippingFee;
 
-        tvShippingFee.setText(formatCurrency(shippingFee));
+        tvShippingFee.setText(formatCurrency(currentShippingFee));
         tvTotalAmount.setText(formatCurrency(total));
+    }
+    
+    private void updateShippingSelection(int id, double fee, String displayText) {
+        selectedCarrierId = id;
+        currentShippingFee = fee;
+        tvSelectedShippingMethod.setText(displayText);
+        calculateTotal();
+    }
+    
+    private void updatePaymentSelection(String methodCode, String displayText) {
+        selectedPaymentMethod = methodCode;
+        tvSelectedPaymentMethod.setText(displayText);
     }
 
     private void setupEvents() {
         btnChangeAddress.setOnClickListener(v -> showAddressSelectionDialog());
-
-        spinnerShipping.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedCarrier = carrierList.get(position);
-                calculateTotal();
+        
+        // --- Toggle Shipping Options ---
+        layoutShippingHeader.setOnClickListener(v -> {
+            isShippingExpanded = !isShippingExpanded;
+            layoutShippingOptions.setVisibility(isShippingExpanded ? View.VISIBLE : View.GONE);
+            imgShippingArrow.setRotation(isShippingExpanded ? 270 : 90);
+            
+            // Nếu mở cái này thì đóng cái kia cho gọn
+            if (isShippingExpanded && isPaymentExpanded) {
+                 isPaymentExpanded = false;
+                 layoutPaymentOptions.setVisibility(View.GONE);
+                 imgPaymentArrow.setRotation(90);
             }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
         });
 
-        spinnerPaymentMethod.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedPaymentMethod = (position == 0) ? "COD" : "PAY";
+        radioGroupShipping.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.rb_standard) {
+                updateShippingSelection(1, 30000, "Tiêu chuẩn - 30.000đ");
+            } else if (checkedId == R.id.rb_fast) {
+                updateShippingSelection(2, 50000, "Nhanh - 50.000đ");
+            } else if (checkedId == R.id.rb_express) {
+                updateShippingSelection(3, 100000, "Hỏa tốc - 100.000đ");
             }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
+            // Tự động đóng sau khi chọn (trải nghiệm mượt hơn)
+            // layoutShippingHeader.performClick(); 
+        });
+
+        // --- Toggle Payment Options ---
+        layoutPaymentHeader.setOnClickListener(v -> {
+            isPaymentExpanded = !isPaymentExpanded;
+            layoutPaymentOptions.setVisibility(isPaymentExpanded ? View.VISIBLE : View.GONE);
+            imgPaymentArrow.setRotation(isPaymentExpanded ? 270 : 90);
+            
+            // Nếu mở cái này thì đóng cái kia cho gọn
+            if (isPaymentExpanded && isShippingExpanded) {
+                 isShippingExpanded = false;
+                 layoutShippingOptions.setVisibility(View.GONE);
+                 imgShippingArrow.setRotation(90);
+            }
+        });
+
+        radioGroupPayment.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.rb_cod) {
+                updatePaymentSelection("COD", "Thanh toán khi nhận hàng (COD)");
+            } else if (checkedId == R.id.rb_vnpay) {
+                updatePaymentSelection("PAY", "Thanh toán Online (PAY)");
+            }
         });
 
         btnPlaceOrder.setOnClickListener(v -> placeOrder());
@@ -234,21 +295,41 @@ public class CheckoutActivity extends AppCompatActivity {
     }
 
     private void placeOrder() {
+        // Prevent double click
+        if (isOrderProcessing) return;
+
         if (selectedAddress == null) {
             Toast.makeText(this, "Vui lòng chọn địa chỉ giao hàng", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (selectedCarrier == null) {
-            Toast.makeText(this, "Vui lòng chọn đơn vị vận chuyển", Toast.LENGTH_SHORT).show();
-            return;
+
+        isOrderProcessing = true;
+        btnPlaceOrder.setEnabled(false); // Disable button immediately
+        btnPlaceOrder.setText("Đang xử lý...");
+
+        // Tính toán totalAmount cuối cùng trước khi gửi (bao gồm shipping fee)
+        double finalTotalAmount = 0;
+        if (currentCart != null) {
+             finalTotalAmount = currentCart.getTotalAmount() + currentShippingFee;
         }
 
         PlaceOrderRequest request = new PlaceOrderRequest(
                 selectedAddress.getId(),
-                selectedCarrier.getId(),
+                selectedCarrierId,
                 selectedPaymentMethod,
-                currentCart.getTotalAmount()
+                finalTotalAmount // Gửi tổng tiền ĐÃ CỘNG PHÍ SHIP
         );
+        
+        if (selectedCarrierId == 1) {
+             request.setNotes("Giao tiêu chuẩn (trong 8h trước 20h)");
+        } else if (selectedCarrierId == 2) {
+             request.setNotes("Giao nhanh (trong 4h)");
+        } else if (selectedCarrierId == 3) {
+             request.setNotes("Giao hỏa tốc (trong 1h - nội thành SG)");
+        }
+
+        // Lưu biến tạm để truyền sang Activity sau
+        final double totalAmountToPass = finalTotalAmount;
 
         ApiService apiService = RetrofitClient.getClient(this).create(ApiService.class);
         Call<PlaceOrderResponse> call = apiService.placeOrder(authToken, request);
@@ -259,20 +340,35 @@ public class CheckoutActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(CheckoutActivity.this, "Đặt hàng thành công!", Toast.LENGTH_LONG).show();
 
-                    Intent intent = new Intent(CheckoutActivity.this, MainActivity.class);
+                    // Chuyển hướng sang màn hình Đặt hàng thành công
+                    Intent intent = new Intent(CheckoutActivity.this, OrderSuccessActivity.class);
+                    // Dùng ID trả về từ server
+                    intent.putExtra("ORDER_ID", response.body().getOrderId());
+                    // Dùng số tiền từ response nếu có, hoặc dùng số tiền đã tính toán (ưu tiên response để chính xác)
+                    double confirmedTotal = response.body().getTotalAmount() > 0 ? response.body().getTotalAmount() : totalAmountToPass;
+                    intent.putExtra("TOTAL_AMOUNT", confirmedTotal);
+                    
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     finish();
                 } else {
                     Toast.makeText(CheckoutActivity.this, "Đặt hàng thất bại: " + response.code(), Toast.LENGTH_SHORT).show();
+                    resetOrderButtonState();
                 }
             }
 
             @Override
             public void onFailure(Call<PlaceOrderResponse> call, Throwable t) {
                 Toast.makeText(CheckoutActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                resetOrderButtonState();
             }
         });
+    }
+    
+    private void resetOrderButtonState() {
+        isOrderProcessing = false;
+        btnPlaceOrder.setEnabled(true);
+        btnPlaceOrder.setText("Đặt hàng");
     }
 
     @Override
