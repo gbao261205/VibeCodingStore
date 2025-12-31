@@ -1,6 +1,8 @@
 package com.vibecoding.flowerstore.Model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DataStore {
     // Biến tĩnh (static) để lưu dữ liệu trong suốt quá trình app chạy
@@ -9,4 +11,5 @@ public class DataStore {
     public static List<Category> cachedCategories = null;
 
     public static List<Product> cachedFavorites = null;
+    public static Map<String, List<Product>> categoryCache = new HashMap<>();
 }
