@@ -219,8 +219,8 @@ public interface ApiService {
     Call<List<OrderDTO>> getAllOrders(@Header("Authorization") String authToken);
 
     @GET("admin/products")
-    Call<List<ProductDTO>> getAllProducts(@Query("keyword") String keyword);
-//
+    Call<List<ProductDTO>> getAllProducts(@Query("keyword") String keyword); //Keyword là optional
+
 //    @POST("admin/products/toggle-visibility/{id}")
 //    Call<MessageResponse> toggleProductVisibility(@Path("id") int id);
 }

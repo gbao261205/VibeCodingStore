@@ -74,33 +74,20 @@ public class AdminDashboardActivity extends AppCompatActivity {
         });
 
         orderButton.setOnClickListener(v -> {
-            // Không xóa cache khi chuyển sang tab khác trong Admin
             Intent intent = new Intent(AdminDashboardActivity.this, AdminOrderManagementActivity.class);
             startActivity(intent);
-            // Có thể finish() hoặc không tùy logic navigation, ở đây code cũ finish() thì giữ nguyên.
-            // Nếu finish() thì Activity này bị hủy, nhưng cachedData là static nên vẫn còn.
-            finish();
         });
         
-        logoButton.setOnClickListener(v->{
-            cachedData = null; // Về trang chủ coi như thoát Admin -> xóa cache
-            Intent intent = new Intent(AdminDashboardActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        });
+        logoButton.setOnClickListener(v->{});
         
         productButton.setOnClickListener(v->{
-            // Không xóa cache
             Intent intent = new Intent(AdminDashboardActivity.this, AdminProductManagementActivity.class);
             startActivity(intent);
-            finish();
         });
         
         shopButton.setOnClickListener(v->{
-            // Không xóa cache
             Intent intent = new Intent(AdminDashboardActivity.this, AdminStoreManagementActivity.class);
             startActivity(intent);
-            finish();
         });
         
         dashboardButton.setOnClickListener(v -> {

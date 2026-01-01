@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -45,6 +47,8 @@ public class AdminOrderManagementActivity extends AppCompatActivity implements A
     private List<OrderDTO> masterOrderList = new ArrayList<>();
     private String currentStatusFilter = null;
     private String currentSearchQuery = "";
+    LinearLayout orderButton, dashboardButton, productButton, shopButton;
+    FrameLayout logoButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +72,11 @@ public class AdminOrderManagementActivity extends AppCompatActivity implements A
         btnBack = findViewById(R.id.btnBack);
         etSearch = findViewById(R.id.etSearch);
         progressBar = findViewById(R.id.progressBar);
+        orderButton = findViewById(R.id.orderButton);
+        dashboardButton = findViewById(R.id.dashboardButton);
+        productButton = findViewById(R.id.productButton);
+        shopButton = findViewById(R.id.shopButton);
+        logoButton = findViewById(R.id.logoButton);
     }
 
     private void setupRecyclerView() {
@@ -78,7 +87,36 @@ public class AdminOrderManagementActivity extends AppCompatActivity implements A
     }
 
     private void setupListeners() {
-        btnBack.setOnClickListener(v -> finish());
+        btnBack.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminOrderManagementActivity.this, AdminDashboardActivity.class);
+            startActivity(intent);
+            finish();
+        });
+        orderButton.setOnClickListener(v -> {});
+
+        logoButton.setOnClickListener(v->{
+            Intent intent = new Intent(AdminOrderManagementActivity.this, AdminDashboardActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
+        productButton.setOnClickListener(v->{
+            Intent intent = new Intent(AdminOrderManagementActivity.this, AdminProductManagementActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
+        shopButton.setOnClickListener(v->{
+            Intent intent = new Intent(AdminOrderManagementActivity.this, AdminStoreManagementActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
+        dashboardButton.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminOrderManagementActivity.this, AdminDashboardActivity.class);
+            startActivity(intent);
+            finish();
+        });
 
         chipGroupFilter.setOnCheckedStateChangeListener((group, checkedIds) -> {
             if (checkedIds.isEmpty()) return;
