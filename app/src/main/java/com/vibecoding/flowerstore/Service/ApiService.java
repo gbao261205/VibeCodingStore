@@ -6,6 +6,7 @@ import com.vibecoding.flowerstore.Model.CartDTO;
 import com.vibecoding.flowerstore.Model.Category;
 import com.vibecoding.flowerstore.Model.OrderDTO;
 import com.vibecoding.flowerstore.Model.ProductDTO;
+import com.vibecoding.flowerstore.Model.ShopDTO;
 import com.vibecoding.flowerstore.Model.User;
 
 import java.util.List;
@@ -221,6 +222,6 @@ public interface ApiService {
     @GET("admin/products")
     Call<List<ProductDTO>> getAllProducts(@Query("keyword") String keyword); //Keyword là optional
 
-//    @POST("admin/products/toggle-visibility/{id}")
-//    Call<MessageResponse> toggleProductVisibility(@Path("id") int id);
+    @GET("admin/shops")
+    Call<List<ShopDTO>> getAllShop(@Header("Authorization") String authToken, @Query("keyword") String keyword);
 }

@@ -70,6 +70,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> {
             cachedData = null; // Xóa cache khi thoát
+            Intent intent = new Intent(AdminDashboardActivity.this, ProfileActivity.class);
+            startActivity(intent);
             finish();
         });
 
