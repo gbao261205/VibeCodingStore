@@ -81,30 +81,32 @@
                 android:paddingBottom="12dp">
 
                 <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:hint="Tìm kiếm hoa, quà tặng..."
-                    android:textColorHint="#896172"
-                    android:paddingStart="48dp"
-                    android:paddingEnd="16dp"
+                    android:id="@+id/edt_search"
+                    android:layout_width="370dp"
+                    android:layout_height="44dp"
                     android:background="@drawable/bg_search_input"
-                    android:textSize="16sp"
-                    android:textColor="#181114"
+                    android:hint="Tìm kiếm hoa, quà tặng....."
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:paddingStart="48dp"
+                    android:paddingEnd="16dp"
+                    android:textColor="#181114"
+                    android:textColorHint="#896172"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
+                    android:id="@+id/btn_search_icon"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_search"
+                    android:layout_marginStart="340dp"
                     android:contentDescription="Tìm kiếm"
-                    android:layout_marginStart="12dp"
+                    android:src="@drawable/ic_search"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:tint="#896172" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -57,6 +57,9 @@
             android:exported="false" />
         <!-- 1. Đặt IntroActivity làm màn hình khởi chạy -->
         <activity
+            android:name=".Activity.SearchActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.IntroActivity"
             android:exported="true">
             <intent-filter>
