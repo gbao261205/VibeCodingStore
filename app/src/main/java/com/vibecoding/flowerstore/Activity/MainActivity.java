@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.vibecoding.flowerstore.Adapter.ProductAdapter;
 import com.vibecoding.flowerstore.Adapter.SlideAdapter;
+import com.vibecoding.flowerstore.Model.ApiResponse; // Import ApiResponse
 import com.vibecoding.flowerstore.Model.DataStore;
 import com.vibecoding.flowerstore.Model.Product;
 import com.vibecoding.flowerstore.Model.ProductDTO;
@@ -38,29 +39,25 @@ import com.vibecoding.flowerstore.Model.SlideItem;
 import com.vibecoding.flowerstore.R;
 import com.vibecoding.flowerstore.Service.ApiService;
 import com.vibecoding.flowerstore.Service.RetrofitClient;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.lang.reflect.Type;
 import android.os.Handler;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    // UI COMPONENTS
+    // --- UI COMPONENTS ---
     private RecyclerView recyclerProducts;
     private ProductAdapter productAdapter;
     private RecyclerView recyclerCategories;
     private CategoryAdapter categoryAdapter;
 
-    // SLIDER COMPONENTS (GIỮ NGUYÊN)
+    // --- SLIDER COMPONENTS ---
     private ViewPager2 viewPagerImageSlider;
     private LinearLayout bannerDotsLayout;
     private SlideAdapter slideAdapter;
@@ -69,11 +66,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private ShimmerFrameLayout shimmerFrameLayout;
 
-    // NAVIGATION
+    // --- NAVIGATION ---
     private LinearLayout navHome, navCategories, navFavorites, navAccount;
     private ImageButton cartButton;
 
-    // SEARCH
+    // --- SEARCH ---
     private EditText edtSearch;
     private View btnSearchIcon;
 
@@ -82,23 +79,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Cấu hình Fullscreen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
         setupViews();
-        setupImageSliderAndDots(); // Logic Slide của bạn
+        setupImageSliderAndDots(); // Logic Slider (Giữ nguyên)
         setupRecyclerView();
         setupNavBarListeners();
         setupSearchFunctionality();
 
-        // 1. TẢI DANH SÁCH YÊU THÍCH (Để Adapter biết cái nào tô đỏ)
-        fetchWishlistRaw();
+        // 1. TẢI WISHLIST NGAY KHI VÀO APP
+        // Để cập nhật trạng thái tim đỏ/trắng cho đúng
+        fetchWishlist();
 
         // 2. Logic Categories
         fetchCategoriesFromApi();
 
-        // 3. Logic Products
+        // 3. Logic Products (Home)
+        // Nếu đã có cache thì hiện luôn cho nhanh, sau đó vẫn gọi API update ngầm
         if (DataStore.cachedProducts != null && !DataStore.cachedProducts.isEmpty()) {
             productAdapter.updateData(DataStore.cachedProducts);
             stopShimmer();
@@ -122,6 +123,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         edtSearch = findViewById(R.id.edt_search);
         btnSearchIcon = findViewById(R.id.btn_search_icon);
     }
+
+    // =================================================================
+    // PHẦN 1: LOGIC TẢI WISHLIST (DÙNG API BẠN CUNG CẤP)
+    // =================================================================
+    private void fetchWishlist() {
+        SharedPreferences prefs = getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE);
+        String token = prefs.getString("ACCESS_TOKEN", null);
+
+        // Nếu chưa đăng nhập thì không cần tải wishlist
+        if (token == null) return;
+
+        ApiService apiService = RetrofitClient.getClient(this).create(ApiService.class);
+
+        // Gọi hàm API chuẩn của bạn: sort="wishlisted", page=0, size=50 (lấy nhiều chút)
+        apiService.getWishlistedProducts("wishlisted", 0, 50).enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // Dùng getProducts() giống như bên CategoryProductsActivity
+                    List<Product> wishlist = response.body().getProducts();
+
+                    if (wishlist != null) {
+                        // Cập nhật vào bộ nhớ đệm
+                        DataStore.cachedFavorites = wishlist;
+
+                        // Quan trọng: Báo cho Adapter vẽ lại để hiện tim đỏ
+                        if (productAdapter != null) {
+                            productAdapter.notifyDataSetChanged();
+                        }
+                        Log.d(TAG, "Đã tải Wishlist: " + wishlist.size() + " sản phẩm");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Log.e(TAG, "Lỗi tải wishlist: " + t.getMessage());
+            }
+        });
+    }
+
+    // =================================================================
+    // PHẦN 2: LOGIC SLIDER (GIỮ NGUYÊN)
+    // =================================================================
     private void setupImageSliderAndDots() {
         List<SlideItem> slideItems = new ArrayList<>();
         slideItems.add(new SlideItem(R.drawable.banner1));
@@ -180,113 +225,201 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             else imageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.dot_inactive));
         }
     }
-    // --- HẾT LOGIC SLIDER ---
 
-    // --- HÀM TẢI WISHLIST (MỚI - DÙNG ResponseBody ĐỂ TRÁNH LỖI) ---
-    private void fetchWishlistRaw() {
-        SharedPreferences prefs = getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE);
-        String token = prefs.getString("ACCESS_TOKEN", null);
-        if (token == null) return;
-
-        ApiService apiService = RetrofitClient.getClient(this).create(ApiService.class);
-
-        // Bạn cần đảm bảo trong ApiService có: @GET("api/v1/products?sort=wishlisted") Call<ResponseBody> getWishlistRaw();
-        // Hoặc dùng tạm @GET để test:
-        // Lưu ý: apiService.getProductsByCategory("wishlisted") của bạn trả về ApiResponse bị lỗi
-        // Nên mình sẽ dùng Call<ResponseBody> để lấy dữ liệu thô và tự parse.
-
-        // Vui lòng thêm vào ApiService: @GET("api/v1/products?sort=wishlisted") Call<ResponseBody> getRawWishlist();
-        // Nếu không thêm được, hãy bỏ qua hàm này, nhưng nút tim sẽ không đỏ khi mới vào app.
-    }
-
+    // =================================================================
+    // PHẦN 3: SETUP RECYCLERVIEW & API HOME
+    // =================================================================
     private void setupRecyclerView() {
+        // Product Adapter
         productAdapter = new ProductAdapter(new ArrayList<>(), this);
-        recyclerProducts.setLayoutManager(new GridLayoutManager(this, 2));
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        recyclerProducts.setLayoutManager(layoutManager);
         recyclerProducts.setAdapter(productAdapter);
 
+        // Category Adapter
         categoryAdapter = new CategoryAdapter(new ArrayList<>(), this, category -> {
             Intent intent = new Intent(MainActivity.this, CategoryProductsActivity.class);
             intent.putExtra("category_slug", category.getSlug());
+            intent.putExtra("category_name", category.getName());
             startActivity(intent);
         });
-        recyclerCategories.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        LinearLayoutManager categoryLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerCategories.setLayoutManager(categoryLayoutManager);
         recyclerCategories.setAdapter(categoryAdapter);
     }
 
     private void fetchHomeProductsMixed() {
         ApiService apiService = RetrofitClient.getClient(this).create(ApiService.class);
-        apiService.getHomeProducts().enqueue(new Callback<Map<String, List<ProductDTO>>>() {
+        Call<Map<String, List<ProductDTO>>> call = apiService.getHomeProducts();
+
+        call.enqueue(new Callback<Map<String, List<ProductDTO>>>() {
             @Override
             public void onResponse(Call<Map<String, List<ProductDTO>>> call, Response<Map<String, List<ProductDTO>>> response) {
                 stopShimmer();
                 if (response.isSuccessful() && response.body() != null) {
+                    Map<String, List<ProductDTO>> mapData = response.body();
                     List<Product> allProducts = new ArrayList<>();
-                    for (List<ProductDTO> dtoList : response.body().values()) {
+
+                    for (List<ProductDTO> dtoList : mapData.values()) {
                         for (ProductDTO dto : dtoList) {
                             Product p = new Product();
-                            p.setId(dto.getId()); p.setName(dto.getName()); p.setImage(dto.getImageUrl());
+                            p.setId(dto.getId());
+                            p.setName(dto.getName());
+                            p.setImage(dto.getImageUrl());
+
+                            // Xử lý giá
                             if (dto.getPrice() != null) p.setPrice(dto.getPrice().doubleValue());
+
+                            // --- BỔ SUNG CÁC TRƯỜNG BỊ THIẾU ---
+                            p.setStock(dto.getStock()); // <--- QUAN TRỌNG: Lấy số lượng tồn kho
+
+                            // Lấy thêm giá giảm và trạng thái active nếu cần
+                            if (dto.getDiscountedPrice() != null) {
+                                p.setDiscountedPrice(dto.getDiscountedPrice().doubleValue());
+                            }
+                            p.setActive(dto.isActive());
+                            // ------------------------------------
+
                             allProducts.add(p);
                         }
                     }
-                    DataStore.cachedProducts = allProducts;
-                    productAdapter.updateData(allProducts);
+
+                    if (!allProducts.isEmpty()) {
+                        productAdapter.updateData(allProducts);
+                        DataStore.cachedProducts = allProducts;
+                    }
                 }
             }
-            @Override public void onFailure(Call<Map<String, List<ProductDTO>>> call, Throwable t) { stopShimmer(); }
+            @Override
+            public void onFailure(Call<Map<String, List<ProductDTO>>> call, Throwable t) {
+                stopShimmer();
+            }
         });
     }
 
     private void fetchCategoriesFromApi() {
         ApiService apiService = RetrofitClient.getClient(this).create(ApiService.class);
         apiService.getCategories().enqueue(new Callback<List<Category>>() {
-            @Override public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
-                if (response.isSuccessful() && response.body() != null) categoryAdapter.updateData(response.body());
+            @Override
+            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    categoryAdapter.updateData(response.body());
+                }
             }
             @Override public void onFailure(Call<List<Category>> call, Throwable t) {}
         });
     }
 
-    // Navigation & UI Helpers
+    // =================================================================
+    // PHẦN 4: NAVIGATION & SEARCH
+    // =================================================================
     private void setupNavBarListeners() {
-        navHome.setOnClickListener(this); navCategories.setOnClickListener(this);
-        navFavorites.setOnClickListener(this); navAccount.setOnClickListener(this);
+        navHome.setOnClickListener(this);
+        navCategories.setOnClickListener(this);
+        navFavorites.setOnClickListener(this);
+        navAccount.setOnClickListener(this);
         cartButton.setOnClickListener(this);
     }
 
-    @Override public void onClick(View v) {
+    @Override
+    public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.nav_home) return;
-        if (id == R.id.nav_categories) startActivity(new Intent(this, CategoriesActivity.class));
-        if (id == R.id.nav_favorites) startActivity(new Intent(this, FavoriteActivity.class));
-        if (id == R.id.nav_account) startActivity(new Intent(this, ProfileActivity.class));
-        if (id == R.id.button_cart) startActivity(new Intent(this, CartActivity.class));
+        Intent intent = null;
+
+        if (id == R.id.button_cart) {
+            intent = new Intent(this, CartActivity.class);
+        } else if (id == R.id.nav_categories) {
+            intent = new Intent(this, CategoriesActivity.class);
+        } else if (id == R.id.nav_favorites) {
+            intent = new Intent(this, FavoriteActivity.class);
+        } else if (id == R.id.nav_account) {
+            intent = new Intent(this, ProfileActivity.class);
+        }
+
+        if (intent != null) {
+            startActivity(intent);
+        }
     }
 
     private void setupSearchFunctionality() {
         if (edtSearch != null) {
             edtSearch.setOnEditorActionListener((v, actionId, event) -> {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) { navigateToSearch(); return true; }
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    navigateToSearch();
+                    return true;
+                }
                 return false;
             });
         }
-        if (btnSearchIcon != null) btnSearchIcon.setOnClickListener(v -> navigateToSearch());
+        if (btnSearchIcon != null) {
+            btnSearchIcon.setOnClickListener(v -> navigateToSearch());
+        }
     }
 
     private void navigateToSearch() {
         String keyword = edtSearch.getText().toString().trim();
         if (!keyword.isEmpty()) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) imm.hideSoftInputFromWindow(edtSearch.getWindowToken(), 0);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(edtSearch.getWindowToken(), 0);
+            }
             Intent intent = new Intent(this, SearchActivity.class);
             intent.putExtra("SEARCH_KEYWORD", keyword);
             startActivity(intent);
         }
     }
 
-    private void startShimmer() { shimmerFrameLayout.setVisibility(View.VISIBLE); shimmerFrameLayout.startShimmer(); recyclerProducts.setVisibility(View.GONE); }
-    private void stopShimmer() { shimmerFrameLayout.stopShimmer(); shimmerFrameLayout.setVisibility(View.GONE); recyclerProducts.setVisibility(View.VISIBLE); }
+    private void startShimmer() {
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
+        shimmerFrameLayout.startShimmer();
+        recyclerProducts.setVisibility(View.GONE);
+    }
 
-    @Override protected void onResume() { super.onResume(); sliderHandler.postDelayed(sliderRunnable, 3000); }
-    @Override protected void onPause() { super.onPause(); sliderHandler.removeCallbacks(sliderRunnable); }
+    private void stopShimmer() {
+        shimmerFrameLayout.stopShimmer();
+        shimmerFrameLayout.setVisibility(View.GONE);
+        recyclerProducts.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // 1. Chạy lại Slider (Code cũ)
+        sliderHandler.postDelayed(sliderRunnable, 3000);
+
+        // 2. LOGIC KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP/ĐĂNG XUẤT
+        SharedPreferences prefs = getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE);
+        String token = prefs.getString("ACCESS_TOKEN", null);
+
+        if (token == null) {
+            // --- TRƯỜNG HỢP: USER ĐÃ ĐĂNG XUẤT ---
+            // Nếu không có token mà trong cache vẫn còn danh sách yêu thích
+            // => Xóa ngay cache và cập nhật giao diện về tim trắng
+            if (DataStore.cachedFavorites != null && !DataStore.cachedFavorites.isEmpty()) {
+                DataStore.cachedFavorites.clear();
+                if (productAdapter != null) {
+                    productAdapter.notifyDataSetChanged();
+                }
+            }
+        } else {
+            // --- TRƯỜNG HỢP: USER VỪA ĐĂNG NHẬP HOẶC ĐANG CÓ SESSION ---
+            // Nếu có token nhưng cache đang rỗng (vừa đăng nhập xong)
+            // => Gọi API lấy Wishlist ngay lập tức
+            if (DataStore.cachedFavorites == null || DataStore.cachedFavorites.isEmpty()) {
+                fetchWishlist();
+            } else {
+                // Nếu đã có cache rồi thì cứ refresh lại Adapter cho chắc chắn
+                if (productAdapter != null) {
+                    productAdapter.notifyDataSetChanged();
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sliderHandler.removeCallbacks(sliderRunnable);
+    }
 }

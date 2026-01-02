@@ -119,7 +119,7 @@
         <activity
             android:name=".Activity.OrderSuccessActivity"
             android:exported="false" />
-            
+
         <!-- MoMo Payment Activity -->
         <activity
             android:name="vn.momo.momo_partner.MoMoActivity"
@@ -127,6 +127,12 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".Activity.AllReviewsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.WriteReviewActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

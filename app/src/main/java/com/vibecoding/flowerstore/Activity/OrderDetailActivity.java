@@ -2,17 +2,20 @@ package com.vibecoding.flowerstore.Activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.vibecoding.flowerstore.Adapter.OrderDetailProductAdapter;
 import com.vibecoding.flowerstore.Model.OrderDTO;
 import com.vibecoding.flowerstore.R;
+
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -27,8 +30,8 @@ public class OrderDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title not the title bar
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//int flag, int mask
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_order_detail);
 
         initViews();
@@ -37,6 +40,9 @@ public class OrderDetailActivity extends AppCompatActivity {
         OrderDTO order = (OrderDTO) getIntent().getSerializableExtra("ORDER_DATA");
         if (order != null) {
             fillData(order);
+        } else {
+            Toast.makeText(this, "Không tìm thấy thông tin đơn hàng", Toast.LENGTH_SHORT).show();
+            finish();
         }
 
         btnBack.setOnClickListener(v -> finish());
@@ -62,7 +68,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     private void fillData(OrderDTO order) {
         // 1. Thông tin chung
         tvOrderId.setText("Mã đơn: #" + order.getId());
-        // Xử lý ngày tháng (cắt chuỗi ISO 8601 đơn giản)
+
         String dateStr = order.getCreatedAt() != null ? order.getCreatedAt().replace("T", " ").split("\\.")[0] : "N/A";
         tvDetailDate.setText("Ngày đặt: " + dateStr);
 
@@ -70,15 +76,15 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         // 2. Địa chỉ
         if (order.getUser() != null) {
-            // Nếu UserDTO có fullName thì lấy, không thì lấy từ shippingAddress (nếu backend gộp)
             tvReceiverName.setText(order.getUser().getFullName());
         }
         tvReceiverPhone.setText(order.getShippingPhone());
         tvReceiverAddress.setText(order.getShippingAddress());
 
-        // 3. Sản phẩm
+        // 3. Sản phẩm & Nút Đánh giá (Truyền Status vào Adapter)
         if (order.getOrderDetails() != null) {
-            OrderDetailProductAdapter adapter = new OrderDetailProductAdapter(this, order.getOrderDetails());
+            // QUAN TRỌNG: Truyền thêm order.getStatus() vào đây
+            OrderDetailProductAdapter adapter = new OrderDetailProductAdapter(this, order.getOrderDetails(), order.getStatus());
             rvProducts.setAdapter(adapter);
         }
 
@@ -87,18 +93,15 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         tvPaymentMethod.setText(order.getPaymentMethod());
 
-        // Phí ship (Kiểm tra null)
         BigDecimal shipFee = BigDecimal.ZERO;
         if (order.getShippingCarrier() != null && order.getShippingCarrier().getShippingFee() != null) {
             shipFee = order.getShippingCarrier().getShippingFee();
         }
         tvShippingFee.setText(currencyFormat.format(shipFee));
 
-        // Giảm giá
         BigDecimal discount = order.getDiscountAmount() != null ? order.getDiscountAmount() : BigDecimal.ZERO;
         tvDiscount.setText("-" + currencyFormat.format(discount));
 
-        // Tổng tiền
         tvFinalTotal.setText(currencyFormat.format(order.getTotalAmount()));
     }
 
@@ -106,9 +109,9 @@ public class OrderDetailActivity extends AppCompatActivity {
         if (status == null) return;
         tv.setText(status);
 
-        // Logic màu sắc giống OrderAdapter
         switch (status) {
             case "COMPLETED":
+            case "DELIVERED":
             case "Giao thành công":
                 tv.setBackgroundResource(R.drawable.bg_status_green);
                 tv.setTextColor(Color.parseColor("#166534"));
@@ -118,6 +121,7 @@ public class OrderDetailActivity extends AppCompatActivity {
             case "Chờ xác nhận":
             case "Chờ lấy hàng":
             case "Đang giao":
+            case "SHIPPING":
                 tv.setBackgroundResource(R.drawable.bg_status_orange);
                 tv.setTextColor(Color.parseColor("#9A3412"));
                 break;

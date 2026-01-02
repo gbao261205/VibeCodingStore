@@ -5,7 +5,12 @@ import com.vibecoding.flowerstore.Model.ApiResponse;
 import com.vibecoding.flowerstore.Model.CartDTO;
 import com.vibecoding.flowerstore.Model.Category;
 import com.vibecoding.flowerstore.Model.OrderDTO;
+import com.vibecoding.flowerstore.Model.Product;
 import com.vibecoding.flowerstore.Model.ProductDTO;
+import com.vibecoding.flowerstore.Model.ProductReviewDTO;
+import com.vibecoding.flowerstore.Model.Review;
+import com.vibecoding.flowerstore.Model.ReviewRequest;
+import com.vibecoding.flowerstore.Model.ReviewResponse;
 import com.vibecoding.flowerstore.Model.ShopDTO;
 import com.vibecoding.flowerstore.Model.User;
 // Import các class Request/Response từ Service
@@ -58,6 +63,16 @@ public interface ApiService {
             @Query("page") int page,     // Mặc định 0
             @Query("size") int size      // Mặc định 20
     );
+    @GET("reviews/product/{productId}")
+    Call<List<Review>> getProductReviews(@Path("productId") int productId);
+    // 1. Lấy thông tin form đánh giá
+    // Response trả về chính là object Product nên ta tái sử dụng class Product
+    @GET("reviews/product/{productId}/form-details")
+    Call<ProductReviewDTO> getReviewFormDetails(@Header("Authorization") String token, @Path("productId") int productId);
+
+    // 2. Gửi đánh giá
+    @POST("reviews")
+    Call<ReviewResponse> saveReview(@Header("Authorization") String token, @Body ReviewRequest request);
     @POST("/wishlist/remove/{id}")
     Call<ResponseBody> removeFromWishlist(@Path("id") int id);
     @POST("/wishlist/add/{id}")
