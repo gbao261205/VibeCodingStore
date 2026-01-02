@@ -35,9 +35,6 @@
             android:name=".Activity.AdminDashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.HelpSupportActivity"
-            android:exported="false" />
-        <activity
             android:name=".Activity.EditAddressActivity"
             android:exported="false" />
         <activity

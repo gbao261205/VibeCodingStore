@@ -197,8 +197,11 @@ public interface ApiService {
 //    @GET("shop/register-status")
 //    Call<MessageResponse> getShopRegisterStatus();
 //
-//    @POST("shop/register")
-//    Call<MessageResponse> registerShop(@Body ShopRegisterRequest request);
+    @POST("shop/register")
+    Call<ResponseBody> registerShop( // Đổi từ MessageResponse sang ResponseBody
+            @Header("Authorization") String authToken,
+            @Body ShopRegisterRequest request
+    );
 //
 //    @GET("shop/{shopId}")
 //    Call<ShopDetailResponse> getShopDetail(@Path("shopId") int shopId);
