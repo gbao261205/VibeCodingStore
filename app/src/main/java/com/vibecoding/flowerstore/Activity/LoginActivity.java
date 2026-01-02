@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.vibecoding.flowerstore.Model.DataStore; // Nhớ import DataStore
 import com.vibecoding.flowerstore.R;
 import com.vibecoding.flowerstore.Service.ApiService;
 import com.vibecoding.flowerstore.Service.LoginRequest;
@@ -21,6 +22,7 @@ import com.vibecoding.flowerstore.Service.RetrofitClient;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -32,11 +34,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title not the title bar
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//int flag, int mask
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
 
-        //Ánh xạ
+        // Ánh xạ View
         tvSignUp = findViewById(R.id.tvSignUp);
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
         edtUsername = findViewById(R.id.edtUsername);
@@ -60,35 +62,56 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void Login() {
+        tvNotice.setVisibility(View.GONE);
+
         ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
         LoginRequest loginRequest = new LoginRequest(edtUsername.getText().toString(), edtPassword.getText().toString());
 
         Call<LoginResponse> call = apiService.login(loginRequest);
 
-        call.enqueue(new Callback <LoginResponse>(){
+        call.enqueue(new Callback<LoginResponse>(){
             @Override
-            public void onResponse(Call<LoginResponse> call, retrofit2.Response<LoginResponse> response) {
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
                     LoginResponse loginResponse = response.body();
                     if (loginResponse != null){
+                        // 1. Lưu Token
                         SharedPreferences prefs = getSharedPreferences("MY_APP_PREFS", MODE_PRIVATE);
                         SharedPreferences.Editor editor = prefs.edit();
-                        editor.putString("ACCESS_TOKEN", response.body().getToken()); // Lưu token server trả về
+                        editor.putString("ACCESS_TOKEN", loginResponse.getToken());
                         editor.apply();
+
+                        // 2. --- XÓA DANH SÁCH HIỂN THỊ TRANG HOME (QUAN TRỌNG) ---
+                        // Dòng này giúp trang Home load lại từ đầu, không hiện list cũ
+                        if (DataStore.cachedProducts != null) {
+                            DataStore.cachedProducts.clear();
+                        }
+
+                        // Vẫn cần xóa Favorites cache để tránh hiện tim đỏ của user cũ trong tích tắc
+                        if (DataStore.cachedFavorites != null) {
+                            DataStore.cachedFavorites.clear();
+                        }
+
+                        // Xóa luôn cache category nếu muốn mọi thứ mới hoàn toàn (Tùy chọn)
+                        if (DataStore.categoryCache != null) {
+                            DataStore.categoryCache.clear();
+                        }
+
+                        // 3. Chuyển sang Main và Reset Task
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
+                        finish();
                     }
                 } else {
-                    //Xử lý lỗi
                     Log.e(TAG, "Lỗi đăng nhập: " + response.code());
                     tvNotice.setVisibility(View.VISIBLE);
-                    tvNotice.setText("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập.");
+                    tvNotice.setText("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
                 }
             }
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 Log.e(TAG, "Lỗi kết nối mạng: " + t.getMessage());
-                //Xử lý lỗi kết nối mạng
                 tvNotice.setVisibility(View.VISIBLE);
                 tvNotice.setText("Đăng nhập thất bại. Vui lòng kiểm tra lại kết nối mạng.");
             }

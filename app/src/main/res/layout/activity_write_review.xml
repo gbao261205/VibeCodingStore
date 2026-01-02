@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#f8f6f7">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#FFFFFF"
+        android:elevation="4dp">
+        <ImageView
+            android:id="@+id/btn_back_review"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_arrow_back"
+            android:padding="10dp"
+            android:layout_centerVertical="true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Viết đánh giá"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#000"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="#FFFFFF"
+        android:layout_marginTop="8dp">
+
+        <ImageView
+            android:id="@+id/img_review_product"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder_product"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp"
+            android:layout_gravity="center_vertical">
+            <TextView
+                android:id="@+id/tv_review_product_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đang tải tên sản phẩm..."
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#181114"/>
+            <TextView
+                android:id="@+id/tv_review_shop_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cung cấp bởi: ..."
+                android:textSize="12sp"
+                android:textColor="#666"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        android:padding="16dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chất lượng sản phẩm"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+        <RatingBar
+            android:id="@+id/rb_review_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="1"
+            android:rating="5"
+            android:layout_marginTop="12dp"
+            android:progressTint="#FFC107"/>
+
+        <EditText
+            android:id="@+id/edt_review_comment"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:background="@drawable/bg_search_input"
+            android:hint="Hãy chia sẻ nhận xét cho sản phẩm này nhé..."
+            android:gravity="top|start"
+            android:padding="12dp"
+            android:layout_marginTop="16dp"
+            android:textSize="14sp"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_submit_review"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Gửi đánh giá"
+        android:backgroundTint="#ef3985"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:layout_margin="16dp"/>
+
+</LinearLayout>

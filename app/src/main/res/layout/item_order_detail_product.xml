@@ -15,37 +15,40 @@
         android:scaleType="centerCrop"
         android:background="#F3F4F6"
         android:src="@drawable/ic_launcher_background"
-        app:shapeAppearanceOverlay="@style/RoundedImageView"/>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:layout_marginStart="12dp">
-
-        <TextView
-            android:id="@+id/tvItemName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tên sản phẩm"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:textColor="#111827"
-            android:textStyle="bold"
-            android:textSize="14sp"/>
-
-        <TextView
-            android:id="@+id/tvItemQuantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="x1"
-            android:textColor="#6B7280"
-            android:textSize="13sp"
-            android:layout_marginTop="4dp"/>
-    </LinearLayout>
+        app:shapeAppearanceOverlay="@style/RoundedImageView"/> <LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:orientation="vertical"
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="8dp">
 
     <TextView
+        android:id="@+id/tvItemName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tên sản phẩm"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textColor="#111827"
+        android:textStyle="bold"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/tvItemQuantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="x1"
+        android:textColor="#6B7280"
+        android:textSize="13sp"
+        android:layout_marginTop="4dp"/>
+</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="end"> <TextView
         android:id="@+id/tvItemPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -53,4 +56,22 @@
         android:textColor="#111827"
         android:textStyle="bold"
         android:textSize="14sp"/>
+
+        <Button
+            android:id="@+id/btnRateItem"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="#ef3985"
+            android:text="Đánh giá"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            android:textAllCaps="false"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="0dp"
+            android:minHeight="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:visibility="gone"/> </LinearLayout>
+
 </LinearLayout>
