@@ -50,6 +50,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private EditText edtName, edtPhone, edtEmail;
     private TextView tvNameDisplay, tvEmailDisplay;
     private MaterialButton btnSave;
+    private View loadingLayout;
 
     // Biến lưu Uri ảnh được chọn
     private Uri selectedImageUri = null;
@@ -104,6 +105,7 @@ public class EditProfileActivity extends AppCompatActivity {
         edtEmail = findViewById(R.id.edtEmail); // Readonly
 
         btnSave = findViewById(R.id.btnSave);
+        loadingLayout = findViewById(R.id.loadingLayout);
     }
 
     private void populateUserData(User user) {
@@ -154,6 +156,9 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         }
 
+        // Hiện loading
+        loadingLayout.setVisibility(View.VISIBLE);
+
         // --- BƯỚC 1: Xử lý phần JSON (request) ---
         EditProfileRequest profileRequest = new EditProfileRequest(fullName, phoneNumber);
         String jsonString = new Gson().toJson(profileRequest);
@@ -187,6 +192,7 @@ public class EditProfileActivity extends AppCompatActivity {
         apiService.updateProfile(requestPart, avatarFilePart).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                loadingLayout.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
                     Toast.makeText(EditProfileActivity.this, "Cập nhật thành công!", Toast.LENGTH_SHORT).show();
                     ProfileActivity.invalidateProfileCache();
@@ -203,6 +209,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                loadingLayout.setVisibility(View.GONE);
                 Toast.makeText(EditProfileActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e("API_ERROR", t.getMessage());
             }
