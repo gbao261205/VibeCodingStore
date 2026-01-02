@@ -1,6 +1,7 @@
 package com.vibecoding.flowerstore.Model;
 
 import java.io.Serializable;
+import com.vibecoding.flowerstore.Model.RoleDTO; // Import tường minh để fix lỗi cannot find symbol
 
 public class UserDTO implements Serializable {
     private Integer id;
@@ -40,15 +41,4 @@ public class UserDTO implements Serializable {
 
     public String getCreatedAt() { return createdAt; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
-}
-
-// RoleDTO Class
-class RoleDTO implements Serializable {
-    private Integer id;
-    private String name;
-
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
 }
