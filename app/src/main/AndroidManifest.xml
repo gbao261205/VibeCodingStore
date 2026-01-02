@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FlowerStore"
         android:usesCleartextTraffic="true"
-        tools:replace="android:fullBackupContent">
+        tools:replace="android:fullBackupContent,android:theme">
         <activity
             android:name=".Activity.AdminProductManagementActivity"
             android:exported="false" />
@@ -119,6 +119,14 @@
         <activity
             android:name=".Activity.OrderSuccessActivity"
             android:exported="false" />
+            
+        <!-- MoMo Payment Activity -->
+        <activity
+            android:name="vn.momo.momo_partner.MoMoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
 </manifest>

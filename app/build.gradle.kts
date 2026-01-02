@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
@@ -16,6 +18,23 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // --- CẤU HÌNH ĐỌC KEY TỪ LOCAL.PROPERTIES ---
+        val properties = Properties()
+        val localPropertiesFile = project.rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            properties.load(localPropertiesFile.inputStream())
+        }
+
+        // Lấy giá trị từ local.properties, nếu không có thì dùng giá trị mặc định (hoặc chuỗi rỗng)
+        val partnerCode = properties.getProperty("MOMO_PARTNER_CODE", "")
+        val accessKey = properties.getProperty("MOMO_ACCESS_KEY", "")
+        val secretKey = properties.getProperty("MOMO_SECRET_KEY", "")
+
+        // Tạo biến BuildConfig để dùng trong Java
+        buildConfigField("String", "MOMO_PARTNER_CODE", "\"$partnerCode\"")
+        buildConfigField("String", "MOMO_ACCESS_KEY", "\"$accessKey\"")
+        buildConfigField("String", "MOMO_SECRET_KEY", "\"$secretKey\"")
     }
 
     buildTypes {
@@ -31,6 +50,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    // Bật tính năng BuildConfig
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
@@ -43,24 +67,15 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation("com.google.android.material:material:1.9.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-
-    // Gson Converter - Chuyển đổi JSON sang Java Object
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-
-    // 2. TẢI VÀ HIỂN THỊ HÌNH ẢNH
-    // Glide - Thư viện tải ảnh
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
-
-    // 3. KIẾN TRÚC ỨNG DỤNG (KHUYẾN NGHỊ)
-    // ViewModel - Giữ dữ liệu UI không bị ảnh hưởng bởi vòng đời (lifecycle)
     implementation ("androidx.lifecycle:lifecycle-viewmodel:2.7.0")
-    // LiveData - Tạo data có thể quan sát được
     implementation("androidx.lifecycle:lifecycle-livedata:2.7.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.facebook.shimmer:shimmer:0.5.0")
-
     implementation("io.socket:socket.io-client:2.1.0")
     implementation("com.google.code.gson:gson:2.10.1")
+    
+    // MoMo Payment
+    implementation(project(":momo_partner_sdk"))
 }

@@ -19,6 +19,10 @@ public class PlaceOrderRequest {
         this.notes = notes;
     }
 
+    public String getNotes() {
+        return notes;
+    }
+
     public void setDiscountCode(String discountCode) {
         this.discountCode = discountCode;
     }

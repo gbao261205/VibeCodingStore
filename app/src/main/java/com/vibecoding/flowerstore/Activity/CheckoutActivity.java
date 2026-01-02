@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.vibecoding.flowerstore.Adapter.CheckoutAdapter;
+import com.vibecoding.flowerstore.BuildConfig; // Đã import BuildConfig
 import com.vibecoding.flowerstore.Model.AddressDTO;
 import com.vibecoding.flowerstore.Model.CartDTO;
 import com.vibecoding.flowerstore.Service.CheckoutDetailsResponse;
@@ -33,12 +34,15 @@ import com.vibecoding.flowerstore.Service.RetrofitClient;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import vn.momo.momo_partner.AppMoMoLib;
 
 public class CheckoutActivity extends AppCompatActivity {
 
@@ -75,11 +79,24 @@ public class CheckoutActivity extends AppCompatActivity {
     private boolean isShippingExpanded = false;
     private boolean isPaymentExpanded = false;
     private boolean isOrderProcessing = false; // Prevent double click
+    
+    // MoMo Info (Lấy từ BuildConfig để bảo mật)
+    private String partnerCode = BuildConfig.MOMO_PARTNER_CODE; 
+    private String accessKey = BuildConfig.MOMO_ACCESS_KEY;
+    private String secretKey = BuildConfig.MOMO_SECRET_KEY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
+        
+        // Kiểm tra xem Key có được load lên không (Chỉ dùng để debug, sau này xóa đi)
+        if (partnerCode == null || partnerCode.isEmpty()) {
+            Toast.makeText(this, "Cảnh báo: Chưa cấu hình MoMo Partner Code trong local.properties", Toast.LENGTH_LONG).show();
+        }
+
+        // Khởi tạo môi trường Test MoMo (DEVELOPMENT)
+        AppMoMoLib.getInstance().setEnvironment(AppMoMoLib.ENVIRONMENT.DEVELOPMENT);
 
         setupToolbar();
         initViews();
@@ -229,7 +246,6 @@ public class CheckoutActivity extends AppCompatActivity {
             layoutShippingOptions.setVisibility(isShippingExpanded ? View.VISIBLE : View.GONE);
             imgShippingArrow.setRotation(isShippingExpanded ? 270 : 90);
             
-            // Nếu mở cái này thì đóng cái kia cho gọn
             if (isShippingExpanded && isPaymentExpanded) {
                  isPaymentExpanded = false;
                  layoutPaymentOptions.setVisibility(View.GONE);
@@ -245,8 +261,6 @@ public class CheckoutActivity extends AppCompatActivity {
             } else if (checkedId == R.id.rb_express) {
                 updateShippingSelection(3, 100000, "Hỏa tốc - 100.000đ");
             }
-            // Tự động đóng sau khi chọn (trải nghiệm mượt hơn)
-            // layoutShippingHeader.performClick(); 
         });
 
         // --- Toggle Payment Options ---
@@ -255,7 +269,6 @@ public class CheckoutActivity extends AppCompatActivity {
             layoutPaymentOptions.setVisibility(isPaymentExpanded ? View.VISIBLE : View.GONE);
             imgPaymentArrow.setRotation(isPaymentExpanded ? 270 : 90);
             
-            // Nếu mở cái này thì đóng cái kia cho gọn
             if (isPaymentExpanded && isShippingExpanded) {
                  isShippingExpanded = false;
                  layoutShippingOptions.setVisibility(View.GONE);
@@ -267,11 +280,87 @@ public class CheckoutActivity extends AppCompatActivity {
             if (checkedId == R.id.rb_cod) {
                 updatePaymentSelection("COD", "Thanh toán khi nhận hàng (COD)");
             } else if (checkedId == R.id.rb_vnpay) {
-                updatePaymentSelection("PAY", "Thanh toán Online (PAY)");
+                updatePaymentSelection("PAY", "Thanh toán Online (MoMo)");
             }
         });
 
-        btnPlaceOrder.setOnClickListener(v -> placeOrder());
+        btnPlaceOrder.setOnClickListener(v -> {
+            if (isOrderProcessing) return;
+
+            if (selectedAddress == null) {
+                Toast.makeText(this, "Vui lòng chọn địa chỉ giao hàng", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Nếu chọn MoMo thì request Payment trước
+            if ("PAY".equals(selectedPaymentMethod)) {
+                requestMoMoPayment();
+            } else {
+                // COD thì gọi API luôn
+                callPlaceOrderApi();
+            }
+        });
+    }
+
+    // --- MOMO LOGIC ---
+    private void requestMoMoPayment() {
+        double finalTotalAmount = 0;
+        if (currentCart != null) {
+            finalTotalAmount = currentCart.getTotalAmount() + currentShippingFee;
+        }
+        
+        long amount = (long) finalTotalAmount;
+        String orderId = "DH" + System.currentTimeMillis();
+        String orderInfo = "Thanh toan don hang #" + orderId;
+
+        AppMoMoLib.getInstance().setAction(AppMoMoLib.ACTION.PAYMENT);
+        AppMoMoLib.getInstance().setActionType(AppMoMoLib.ACTION_TYPE.GET_TOKEN);
+
+        Map<String, Object> eventValue = new HashMap<>();
+        eventValue.put("merchantname", "Flower Store"); // Tên hiển thị trên MoMo
+        eventValue.put("merchantcode", partnerCode);
+        eventValue.put("amount", amount);
+        eventValue.put("orderId", orderId);
+        eventValue.put("orderLabel", "Mã đơn hàng"); 
+
+        eventValue.put("merchantnamelabel", "Dịch vụ");
+        eventValue.put("fee", 0);
+        eventValue.put("description", orderInfo);
+        
+        eventValue.put("requestId", orderId);
+        eventValue.put("partnerCode", partnerCode);
+        
+        // Thêm extraData nếu cần
+        eventValue.put("extraData", "");
+        eventValue.put("extra", "");
+
+        try {
+            AppMoMoLib.getInstance().requestMoMoCallBack(this, eventValue);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Lỗi khởi tạo MoMo: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == AppMoMoLib.getInstance().REQUEST_CODE_MOMO && resultCode == -1) {
+            if(data != null) {
+                if(data.getIntExtra("status", -1) == 0) {
+                    // TOKEN IS AVAILABLE -> Thanh toán thành công ở client
+                    Toast.makeText(this, "Thanh toán MoMo thành công!", Toast.LENGTH_SHORT).show();
+                    // String token = data.getStringExtra("data"); 
+                    // Gọi API đặt hàng sau khi thanh toán thành công
+                    callPlaceOrderApi();
+                } else {
+                    String message = data.getStringExtra("message");
+                    Toast.makeText(this, "Thanh toán thất bại: " + (message != null ? message : "Đã hủy"), Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Thanh toán thất bại: Không nhận được phản hồi", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void showAddressSelectionDialog() {
@@ -294,20 +383,12 @@ public class CheckoutActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void placeOrder() {
-        // Prevent double click
-        if (isOrderProcessing) return;
-
-        if (selectedAddress == null) {
-            Toast.makeText(this, "Vui lòng chọn địa chỉ giao hàng", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
+    private void callPlaceOrderApi() {
         isOrderProcessing = true;
-        btnPlaceOrder.setEnabled(false); // Disable button immediately
+        btnPlaceOrder.setEnabled(false);
         btnPlaceOrder.setText("Đang xử lý...");
 
-        // Tính toán totalAmount cuối cùng trước khi gửi (bao gồm shipping fee)
+        // Tính toán totalAmount cuối cùng
         double finalTotalAmount = 0;
         if (currentCart != null) {
              finalTotalAmount = currentCart.getTotalAmount() + currentShippingFee;
@@ -316,8 +397,8 @@ public class CheckoutActivity extends AppCompatActivity {
         PlaceOrderRequest request = new PlaceOrderRequest(
                 selectedAddress.getId(),
                 selectedCarrierId,
-                selectedPaymentMethod,
-                finalTotalAmount // Gửi tổng tiền ĐÃ CỘNG PHÍ SHIP
+                selectedPaymentMethod, // "COD" hoặc "PAY"
+                finalTotalAmount
         );
         
         if (selectedCarrierId == 1) {
@@ -327,8 +408,13 @@ public class CheckoutActivity extends AppCompatActivity {
         } else if (selectedCarrierId == 3) {
              request.setNotes("Giao hỏa tốc (trong 1h - nội thành SG)");
         }
+        
+        // Nếu là MoMo, có thể append thêm ghi chú
+        if ("PAY".equals(selectedPaymentMethod)) {
+            String currentNote = request.getNotes() != null ? request.getNotes() : "";
+            request.setNotes(currentNote + " - Đã thanh toán qua MoMo");
+        }
 
-        // Lưu biến tạm để truyền sang Activity sau
         final double totalAmountToPass = finalTotalAmount;
 
         ApiService apiService = RetrofitClient.getClient(this).create(ApiService.class);
@@ -340,11 +426,8 @@ public class CheckoutActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(CheckoutActivity.this, "Đặt hàng thành công!", Toast.LENGTH_LONG).show();
 
-                    // Chuyển hướng sang màn hình Đặt hàng thành công
                     Intent intent = new Intent(CheckoutActivity.this, OrderSuccessActivity.class);
-                    // Dùng ID trả về từ server
                     intent.putExtra("ORDER_ID", response.body().getOrderId());
-                    // Dùng số tiền từ response nếu có, hoặc dùng số tiền đã tính toán (ưu tiên response để chính xác)
                     double confirmedTotal = response.body().getTotalAmount() > 0 ? response.body().getTotalAmount() : totalAmountToPass;
                     intent.putExtra("TOTAL_AMOUNT", confirmedTotal);
                     

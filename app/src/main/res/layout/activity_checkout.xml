@@ -328,7 +328,7 @@
                                 android:id="@+id/rb_vnpay"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Thanh toán Online (PAY)"
+                                android:text="Thanh toán Online (MoMo)"
                                 android:textColor="#111827"
                                 android:padding="8dp"
                                 android:buttonTint="#ef3985"/>
