@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,7 +44,12 @@ public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.Checko
         Product product = item.getProduct();
 
         holder.productName.setText(product.getName());
-        holder.quantityText.setText("x" + item.getQuantity());
+        
+        // Sử dụng EditText để hiển thị số lượng (read-only)
+        holder.quantityInput.setText("x" + item.getQuantity());
+        holder.quantityInput.setEnabled(false); // Không cho sửa
+        holder.quantityInput.setFocusable(false);
+        holder.quantityInput.setBackground(null); // Xóa background nếu có
 
         double unitPrice = 0;
         if (item.getQuantity() > 0) {
@@ -62,8 +68,10 @@ public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.Checko
         holder.decreaseButton.setVisibility(View.GONE);
         holder.deleteButton.setVisibility(View.GONE);
         
-        // Chỉnh lại padding/margin nếu cần thiết
-        holder.quantityText.setPadding(0, 0, 0, 0);
+        // Ẩn checkbox nếu có
+        if (holder.itemCheckbox != null) {
+            holder.itemCheckbox.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -73,18 +81,20 @@ public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.Checko
 
     public static class CheckoutViewHolder extends RecyclerView.ViewHolder {
         ImageView productImage;
-        TextView productName, productPrice, quantityText;
-        View increaseButton, decreaseButton, deleteButton;
+        TextView productName, productPrice;
+        EditText quantityInput;
+        View increaseButton, decreaseButton, deleteButton, itemCheckbox;
 
         public CheckoutViewHolder(@NonNull View itemView) {
             super(itemView);
             productImage = itemView.findViewById(R.id.product_image);
             productName = itemView.findViewById(R.id.product_name);
             productPrice = itemView.findViewById(R.id.product_price);
-            quantityText = itemView.findViewById(R.id.quantity_text);
+            quantityInput = itemView.findViewById(R.id.quantity_input); // Đã đổi ID từ quantity_text sang quantity_input
             increaseButton = itemView.findViewById(R.id.increase_button);
             decreaseButton = itemView.findViewById(R.id.decrease_button);
             deleteButton = itemView.findViewById(R.id.delete_button);
+            itemCheckbox = itemView.findViewById(R.id.item_checkbox);
         }
     }
 }

@@ -7,15 +7,31 @@
     android:orientation="horizontal"
     android:padding="16dp"
     android:gravity="center_vertical"
-    android:background="@color/white"
+    android:background="@drawable/bg_card_white"
     android:layout_marginBottom="12dp">
 
-    <ImageView
-        android:id="@+id/product_image"
+    <CheckBox
+        android:id="@+id/item_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/primary"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_marginEnd="8dp"/>
+
+    <androidx.cardview.widget.CardView
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:scaleType="centerCrop"
-        tools:src="@drawable/placeholder_product" />
+        app:cardCornerRadius="8dp"
+        app:cardElevation="0dp">
+
+        <ImageView
+            android:id="@+id/product_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/placeholder_product" />
+    </androidx.cardview.widget.CardView>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -30,6 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
+            android:textStyle="bold"
             android:textColor="@color/text_primary"
             android:maxLines="1"
             android:ellipsize="end"
@@ -41,6 +58,7 @@
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:textColor="@color/primary"
+            android:layout_marginTop="4dp"
             tools:text="250.000đ" />
     </LinearLayout>
 
@@ -52,32 +70,42 @@
 
         <ImageButton
             android:id="@+id/decrease_button"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:src="@drawable/ic_remove" 
-            android:background="?attr/selectableItemBackgroundBorderless"/>
+            android:background="@drawable/bg_circle_background_light"
+            android:padding="6dp"
+            app:tint="@color/text_primary"/>
 
-        <TextView
-            android:id="@+id/quantity_text"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/quantity_input"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:minWidth="24dp"
             android:gravity="center"
             android:textSize="16sp"
+            android:textStyle="bold"
             android:textColor="@color/text_primary"
+            android:inputType="number"
+            android:maxLength="2"
+            android:maxLines="1"
+            android:background="@null"
+            android:imeOptions="actionDone"
             tools:text="1" />
 
         <ImageButton
             android:id="@+id/increase_button"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:src="@drawable/ic_add"
-            android:background="?attr/selectableItemBackgroundBorderless"/>
+            android:background="@drawable/bg_circle_background_light"
+            android:padding="6dp"
+            app:tint="@color/text_primary"/>
             
         <ImageButton
             android:id="@+id/delete_button"
             android:layout_width="32dp"
             android:layout_height="32dp"
+            android:visibility="gone"
             android:src="@drawable/ic_delete"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_marginStart="8dp"/>

@@ -1,45 +1,45 @@
 -- Merging decision tree log ---
 manifest
-ADDED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:1:1-16:12
-INJECTED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:1:1-16:12
+ADDED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml:1:1-16:12
+INJECTED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml:1:1-16:12
 	package
-		ADDED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:2:5-35
-		INJECTED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml
+		ADDED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml:2:5-35
+		INJECTED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml
 	xmlns:android
-		ADDED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:1:11-69
+		ADDED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml:1:11-69
 uses-permission#android.permission.INTERNET
-ADDED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:3:5-67
+ADDED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml:3:5-67
 	android:name
-		ADDED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:3:22-64
+		ADDED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml:3:22-64
 uses-permission#android.permission.ACCESS_NETWORK_STATE
-ADDED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:4:5-79
+ADDED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml:4:5-79
 	android:name
-		ADDED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:4:22-76
+		ADDED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml:4:22-76
 queries
-ADDED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:5:5-8:15
+ADDED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml:5:5-8:15
 package#com.mservice.momotransfer
-ADDED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:6:9-61
+ADDED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml:6:9-61
 	android:name
-		ADDED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:6:18-58
+		ADDED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml:6:18-58
 package#vn.momo.platform.test
-ADDED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:7:10-58
+ADDED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml:7:10-58
 	android:name
-		ADDED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:7:19-55
+		ADDED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml:7:19-55
 application
-ADDED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:9:5-14:19
+ADDED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml:9:5-14:19
 	android:supportsRtl
-		ADDED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:11:9-35
+		ADDED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml:11:9-35
 	android:label
-		ADDED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:10:9-41
+		ADDED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml:10:9-41
 	android:hardwareAccelerated
-		ADDED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:13:9-43
+		ADDED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml:13:9-43
 	android:theme
-		ADDED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:12:9-40
+		ADDED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml:12:9-40
 uses-sdk
-INJECTED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml
-INJECTED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml
+INJECTED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml
+INJECTED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml
+		INJECTED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from D:\HOCTAP\Nam3\LTDiDong\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml
+		INJECTED from C:\LTDiDong\VibeCodingStore-AndroidApp\momo_partner_sdk\src\main\AndroidManifest.xml
