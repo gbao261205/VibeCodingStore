@@ -1,0 +1,45 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:1:1-16:12
+INJECTED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:1:1-16:12
+	package
+		ADDED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:2:5-35
+		INJECTED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:1:11-69
+uses-permission#android.permission.INTERNET
+ADDED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:3:5-67
+	android:name
+		ADDED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:3:22-64
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:4:5-79
+	android:name
+		ADDED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:4:22-76
+queries
+ADDED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:5:5-8:15
+package#com.mservice.momotransfer
+ADDED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:6:9-61
+	android:name
+		ADDED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:6:18-58
+package#vn.momo.platform.test
+ADDED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:7:10-58
+	android:name
+		ADDED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:7:19-55
+application
+ADDED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:9:5-14:19
+	android:supportsRtl
+		ADDED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:11:9-35
+	android:label
+		ADDED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:10:9-41
+	android:hardwareAccelerated
+		ADDED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:13:9-43
+	android:theme
+		ADDED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml:12:9-40
+uses-sdk
+INJECTED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml
+INJECTED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\Users\Sh1n\AndroidStudioProjects\VibeCodingStore\momo_partner_sdk\src\main\AndroidManifest.xml
