@@ -131,6 +131,20 @@ public class ProductDetailActivity extends AppCompatActivity {
                     }
                 }
             }
+            // C. Nếu chưa thấy, tìm trong cache danh mục (Category Cache) - FIX BUG TẠI ĐÂY
+            if (currentProduct == null && DataStore.categoryCache != null) {
+                for (List<Product> list : DataStore.categoryCache.values()) {
+                    if (list != null) {
+                        for (Product p : list) {
+                            if (p.getId() == productId) {
+                                currentProduct = p;
+                                break;
+                            }
+                        }
+                    }
+                    if (currentProduct != null) break;
+                }
+            }
         }
 
         if (currentProduct != null) {
